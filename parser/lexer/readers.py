@@ -19,19 +19,19 @@ class Reader():
 
 class FileReader(Reader):
     def __init__(self, file: str):
-        self.pos = 0
+        self.pos = -1
 
         with open(file, "r") as f:
             self.code = f.read()
        
     def advance_pointer(self):
-        if self.pos < len(self.code) - 1: self.pos += 1
+        self.pos += 1
 
     def retreat_pointer(self):
         if self.pos > 0: self.pos -= 1
 
     def current_character(self) -> str:
-        if len(self.code) > self.pos > 0:
+        if len(self.code) > self.pos >= 0:
             return self.code[self.pos]
         else:
             return "EOF"

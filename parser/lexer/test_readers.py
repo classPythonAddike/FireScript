@@ -1,6 +1,6 @@
 import os
 
-from lexer.readers import FileReader
+from parser.lexer.readers import FileReader
 
 dummy_file = "code.txt"
 
@@ -13,6 +13,8 @@ def test_filereader():
 
     reader = FileReader(dummy_file)
 
+    reader.advance_pointer()
+
     for _ in range(4): reader.advance_pointer()
     assert reader.current_line() == "Hello!", "Didn't get expected line from file reader!"
 
@@ -20,3 +22,4 @@ def test_filereader():
     assert reader.current_line() == "1234", "Didn't get expected line from file reader!"
 
     delete_file(dummy_file)
+
