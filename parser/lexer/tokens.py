@@ -27,7 +27,8 @@ class String(Token):
 
 
 class NewLine(Token):
-    pass
+    def __repr__(self) -> str:
+        return f"<Token {self.type}: \\n>"
 
 
 class Operator(Token):

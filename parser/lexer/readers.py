@@ -2,7 +2,7 @@
 
 class Reader():
     def __init__(self):
-        pass
+        self.code = ""
 
     def advance_pointer(self):
         pass
