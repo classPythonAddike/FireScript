@@ -81,7 +81,10 @@ class Lexer():
                 return AngleBracket(current)
 
             elif current.isalpha():
-                return Identifier(self.lex_identifier())
+                ident = self.lex_identifier()
+                if ident in ["true", "false"]:
+                    return Bool(ident)
+                return Identifier(ident)
             elif current.isdigit():
                 numeric_type, value = self.lex_numeric()
                 return [Float, Integer][numeric_type == "int"](value)

@@ -25,10 +25,15 @@ class Float(Token):
 class String(Token):
     pass
 
+class Bool(Token):
+    def __init__(self, value: str):
+        self.value = value
+
 
 class NewLine(Token):
     def __repr__(self) -> str:
         return f"<Token {self.type}: \\n>"
+
 
 
 class Operator(Token):

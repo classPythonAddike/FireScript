@@ -89,9 +89,31 @@ class FloatExp(Expression):
     def atom_type(cls) -> str:
         return 'Float'
 
+class BoolExp(Expression):
+    def __init__(self, *args: Token):
+        self.value = args[0].value
+
+    def eval(self) -> str:
+        return f"PUSH BOOL {self.value}\n"
+
+    @classmethod
+    def atom_type(cls) -> str:
+        return 'Bool'
+
+class StrExp(Expression):
+    def __init__(self, *args: Token):
+        self.value = args[0].value
+
+    def eval(self) -> str:
+        """Push an array containing ascii codes of the characters"""
+        return f"PUSH STRING {' '.join([str(ord(i)) for i in self.value])}\n"
+
+    @classmethod
+    def atom_type(cls) -> str:
+        return 'String'
+
 
 # Get a map of all expressions' keywords to their class
-
 def is_expression_type(c):
     return inspect.isclass(c) and c.__module__ == is_expression_type.__module__ and c.__name__ != "Expression"
 
@@ -102,7 +124,6 @@ expression_types = {
 }
 
 # Get a map of all atoms to their token types
-
 atom_types = {
     exp[1].atom_type(): exp[1]
     for exp in inspect.getmembers(sys.modules[__name__], is_expression_type)

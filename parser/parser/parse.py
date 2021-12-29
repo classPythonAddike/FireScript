@@ -49,10 +49,11 @@ class Parser():
             return atom_types[tokens.type](tokens)
 
 
+# Testing purposes
 
 with open("code.txt", "w") as f:
-    f.write("(begin\n   (+ (print (+ 8 (+ 8.5 8))) 8)\n)")
+    f.write("(begin\n   (+ \"Dorime\" (print (+ true 8)))\n    (print 123)\n)\n")
 
 p = Parser(Lexer(FileReader("code.txt")))
-print("Code:\n\n", p.lexer.reader.code, sep="", end="\n\n")
-print("Compiled Output:\n\n", p.parse_program().eval(), sep="")
+print("Code:\n\n```lisp\n", p.lexer.reader.code, sep="", end="```\n\n")
+print("Compiled Output:\n\n```st\n", p.parse_program().eval(), sep="", end="```\n")
