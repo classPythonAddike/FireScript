@@ -2,19 +2,18 @@ from typing import List, Union
 
 from parser.lexer.lexer import Lexer
 from parser.lexer.tokens import Token
-from parser.lexer.readers import StringReader
 
 from parser.parser.atoms import atom_types
 from parser.parser.expressions import Expression, expression_types
 
-from parser.errors.errors import FSyntaxError, initialise_reader
+from parser.errors.errors import FArgsError, FSyntaxError, initialise_reader
 
 class Parser():
     def __init__(self, lexer: Lexer):
         self.lexer = lexer
         initialise_reader(self.lexer.reader)
 
-    def parse_program(self) -> Expression:
+    def parse_program(self) -> str:
         tokens: List[Token] = []
        
         while True:
@@ -25,7 +24,7 @@ class Parser():
             if next_token.type != 'NewLine':
                 tokens.append(next_token)
 
-        return self.parse(self.parse_raw(tokens))
+        return self.parse(self.parse_raw(tokens)).eval({})
 
     def parse_raw(self, tokens: List[Token]):
         if len(tokens) <= 1:
@@ -46,7 +45,18 @@ class Parser():
     def parse(self, tokens: Union[List, Token]) -> Expression:
         if isinstance(tokens, list):
             if tokens[0].value in expression_types:
-                return expression_types[tokens[0].value](
+
+                exp_type = expression_types[tokens[0].value]
+
+                if exp_type.num_args() != 0 and len(tokens) - 1 != exp_type.num_args():
+                    FArgsError(
+                        tokens[0].line,
+                        f"Incorrect number of arguments provided to `{exp_type.keyword()}` "
+                        f"- expected {exp_type.num_args()}"
+                        f" but got {len(tokens) - 1}!"
+                    ).raise_error()
+
+                return exp_type(
                     tokens[0].line,
                     *[self.parse(tok) for tok in tokens[1:]]
                 )

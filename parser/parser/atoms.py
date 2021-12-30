@@ -1,6 +1,7 @@
 import sys
 import inspect
 from typing import Dict
+from parser.errors.errors import FTypeError
 
 from parser.parser.expressions import Expression
 from parser.lexer.tokens import Token
@@ -9,7 +10,15 @@ from parser.lexer.tokens import Token
 
 class IntExp(Expression):
     def __init__(self, *args: Token):
-        self.value = int(args[0].value)
+
+        try:
+            self.value = int(args[0].value)
+        except:
+            FTypeError(
+                args[0].line,
+                "Couldn't parse integer!"
+            ).raise_error()
+
         self.line = args[0].line
 
     def eval(self, _: Dict[str, int]) -> str:
@@ -22,7 +31,15 @@ class IntExp(Expression):
 
 class FloatExp(Expression):
     def __init__(self, *args: Token):
-        self.value = float(args[0].value)
+
+        try:
+            self.value = float(args[0].value)
+        except:
+            FTypeError(
+                args[0].line,
+                "Couldn't parse float!"
+            ).raise_error()
+
         self.line = args[0].line
 
     def eval(self, _: Dict[str, int]) -> str:

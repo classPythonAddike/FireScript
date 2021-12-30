@@ -24,10 +24,18 @@ class Expression():
         """Keyword that defines the token type (int, float, bool, etc)"""
         return ""
 
+    @classmethod
+    def num_args(cls) -> int:
+        """
+            Number of arguments expected to construct this expression
+            0 means infinite
+        """
+        return 0
+
     @property
     def type(self) -> str:
         return self.__class__.__name__
-
+    
     def __repr__(self) -> str:
         return f"<Expression: {self.type}>"
 
@@ -82,12 +90,6 @@ class PutExp(Expression):
 class DefExp(Expression):
     def __init__(self, line: int, *args):
 
-        if len(args) != 2:
-            FArgsError(
-                line,
-                f"Expected 2 arguments, got {len(args)}!"
-            ).raise_error()
-
         self.variable = args[0]
         self.value: Expression = args[1]
         self.line = line
@@ -103,6 +105,9 @@ class DefExp(Expression):
         variables[self.variable.value] = len(variables)
         return f"{self.value.eval(variables)}STORE {len(variables) - 1}\nPOP\n"
 
+    @classmethod
+    def num_args(cls) -> int:
+        return 2
 
     @classmethod
     def keyword(cls) -> str:
@@ -141,6 +146,10 @@ class SubExp(Expression):
         return f"{self.rval.eval(variables)}{self.lval.eval(variables)}SUB\nPOP\nPOP\n"
 
     @classmethod
+    def num_args(cls) -> int:
+        return 2
+
+    @classmethod
     def keyword(cls) -> str:
         return "-"
 
@@ -172,11 +181,22 @@ class DivExp(SubExp):
 
 class IntTypeCast(Expression):
     def __init__(self, line: int, *args: 'Expression'):
+        
+        if len(args) != 1:
+            FArgsError(
+                line,
+                f"Expected 1 arguments, got {len(args)}!"
+            ).raise_error()
+
         self.value = args[0]
         self.line = line
 
     def eval(self, variables: Dict[str, int]) -> str:
         return self.value.eval(variables) + "CAST INT\nPOP\n"
+
+    @classmethod
+    def num_args(cls) -> int:
+        return 1
 
     @classmethod
     def keyword(cls) -> str:
@@ -198,6 +218,7 @@ class StrTypeCast(IntTypeCast):
     @classmethod
     def keyword(cls) -> str:
         return "string"
+
 
 # Get a map of all expressions' keywords to their class
 def is_expression_type(c):
