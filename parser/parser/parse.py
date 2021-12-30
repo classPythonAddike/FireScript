@@ -1,9 +1,10 @@
 from typing import List, Union
 
 from parser.lexer.lexer import Lexer
-from parser.lexer.readers import FileReader
+from parser.lexer.readers import StringReader
 from parser.lexer.tokens import Token
-from parser.parser.expressions import Expression, expression_types, atom_types
+from parser.parser.expressions import Expression, expression_types
+from parser.parser.atoms import atom_types
 
 
 class Parser():
@@ -51,9 +52,20 @@ class Parser():
 
 # Testing purposes
 
-with open("code.txt", "w") as f:
-    f.write("(begin\n   (+ \"Dorime\" (print (+ true 8)))\n    (print 123)\n)\n")
+code = """
+(begin
+    (print 'Program to find volume of a sphere:\n')
+    (define r (float 100))
+    (define pi 3.14)
+    (put
+        (+
+            "Area is"
+            (string (* (/ 4 3) pi r r r))
+        )
+    )
+)
+"""
 
-p = Parser(Lexer(FileReader("code.txt")))
-print("Code:\n\n```lisp\n", p.lexer.reader.code, sep="", end="```\n\n")
-print("Compiled Output:\n\n```st\n", p.parse_program().eval(), sep="", end="```\n")
+p = Parser(Lexer(StringReader(code)))
+print("Code:\n", p.lexer.reader.code, sep="", end="\n")
+print("Compiled Output:\n\n", p.parse_program().eval({}), sep="")

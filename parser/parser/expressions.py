@@ -1,16 +1,17 @@
 import sys
 import inspect
+from typing import Dict
 
-from parser.lexer.tokens import Token
+from parser.lexer.tokens import Identifier
 
 
 class Expression():
     def __init__(self, *args: 'Expression'):
         self.values = args
 
-    def eval(self) -> str:
+    def eval(self, variables: Dict[str, int]) -> str:
         """Outputs bytecode"""
-        return "".join([exp.eval() for exp in self.values])
+        return "".join([exp.eval(variables) for exp in self.values])
 
     @classmethod
     def keyword(cls) -> str:
@@ -31,87 +32,152 @@ class Expression():
 
 
 """
-FireScript is Queue based - First In First Out
+FireScript's runtime uses something similar to a stack.
+When an object is pushed/loaded, it is placed onto the stack.
+But when an object is popped, it is popped from the second position from the top.
 """
 
 # -------------------- Expressions --------------------
 # Expressions can be broken down into a simpler form
 
 class Program(Expression):
+    """(begin ...)"""
     @classmethod
     def keyword(cls) -> str:
         return "begin"
 
 
+# -------------------- Simple Expressions --------------------
+
 class PrintExp(Expression):
-    def eval(self) -> str:
-        return f"{''.join([exp.eval() for exp in reversed(self.values)])}PRINT\nPOP\n"
+    """Print an expression without a newline"""
+    def eval(self, variables: Dict[str, int]) -> str:
+        return ''.join(
+                [
+                    exp.eval(variables) + 'PRINT\nPOP\n'
+                    for exp in self.values
+                ]
+            )
 
     @classmethod
     def keyword(cls) -> str:
         return "print"
 
+class PutExp(Expression):
+    """Print an expression, with a newline"""
+    def eval(self, variables: Dict[str, int]) -> str:
+        return ''.join(
+            [
+                exp.eval(variables) + f"{'PUT' if pos == len(self.values) - 1 else 'PRINT'}\n"
+                for pos, exp in enumerate(self.values)
+            ]
+        )
+
+    @classmethod
+    def keyword(cls) -> str:
+        return "put"
+
+
+class DefExp(Expression):
+    def __init__(self, *args):
+        self.variable: Identifier = args[0]
+        self.value: Expression = args[1]
+
+    def eval(self, variables: Dict[str, int]) -> str:
+        # TODO: Raise error if variable has already been defined
+        variables[self.variable.value] = len(variables)
+        return f"{self.value.eval(variables)}STORE {len(variables) - 1}\nPOP\n"
+
+    @classmethod
+    def keyword(cls) -> str:
+        return "define"
+
+
+# -------------------- Arithmetic Expressions --------------------
+
 
 class AddExp(Expression):
     def __init__(self, *args: Expression):
-        self.lval = args[0]
-        self.rval = args[1]
+        self.values = args
 
-    def eval(self) -> str:
-        return f"{self.rval.eval()}{self.lval.eval()}ADD\nPOP\nPOP\n"
+    def eval(self, variables: Dict[str, int]) -> str:
+        return "".join(
+            [
+                val.eval(variables)
+                for val in self.values
+            ]
+        ) + "ADD\nPOP\nPOP\n" * (len(self.values) - 1)
 
     @classmethod
     def keyword(cls) -> str:
         return "+"
 
-# -------------------- Atoms --------------------
 
-class IntExp(Expression):
-    def __init__(self, *args: Token):
-        self.value = int(args[0].value)
+class SubExp(Expression):
+    def __init__(self, *args: Expression):
+        self.lval = args[0]
+        self.rval = args[1]
 
-    def eval(self) -> str:
-        return f"PUSH INT {self.value}\n"
-
-    @classmethod
-    def atom_type(cls) -> str:
-        return 'Integer'
-
-
-class FloatExp(Expression):
-    def __init__(self, *args: Token):
-        self.value = float(args[0].value)
-
-    def eval(self) -> str:
-        return f"PUSH FLOAT {self.value}\n"
+    def eval(self, variables: Dict[str, int]) -> str:
+        return f"{self.rval.eval(variables)}{self.lval.eval(variables)}SUB\nPOP\nPOP\n"
 
     @classmethod
-    def atom_type(cls) -> str:
-        return 'Float'
+    def keyword(cls) -> str:
+        return "-"
 
-class BoolExp(Expression):
-    def __init__(self, *args: Token):
-        self.value = args[0].value
 
-    def eval(self) -> str:
-        return f"PUSH BOOL {self.value}\n"
-
-    @classmethod
-    def atom_type(cls) -> str:
-        return 'Bool'
-
-class StrExp(Expression):
-    def __init__(self, *args: Token):
-        self.value = args[0].value
-
-    def eval(self) -> str:
-        """Push an array containing ascii codes of the characters"""
-        return f"PUSH STRING {' '.join([str(ord(i)) for i in self.value])}\n"
+class MulExp(AddExp):
+    def eval(self, variables: Dict[str, int]) -> str:
+        return "".join(
+            [
+                val.eval(variables)
+                for val in self.values
+            ]
+        ) + "MUL\nPOP\nPOP\n" * (len(self.values) - 1)
 
     @classmethod
-    def atom_type(cls) -> str:
-        return 'String'
+    def keyword(cls) -> str:
+        return "*"
 
+class DivExp(SubExp):
+    def eval(self, variables: Dict[str, int]) -> str:
+        return f"{self.rval.eval(variables)}{self.lval.eval(variables)}DIV\nPOP\nPOP\n"
+
+    @classmethod
+    def keyword(cls) -> str:
+        return "/"
+
+
+# -------------------- TypeCasting --------------------
+
+
+class IntTypeCast(Expression):
+    def __init__(self, *args: 'Expression'):
+        self.value = args[0]
+
+    def eval(self, variables: Dict[str, int]) -> str:
+        return self.value.eval(variables) + "CAST INT\nPOP\n"
+
+    @classmethod
+    def keyword(cls) -> str:
+        return "int"
+
+
+class FloatTypeCast(IntTypeCast):
+    def eval(self, variables: Dict[str, int]) -> str:
+        return self.value.eval(variables) + "CAST FLOAT\nPOP\n"
+
+    @classmethod
+    def keyword(cls) -> str:
+        return "float"
+
+class StrTypeCast(IntTypeCast):
+    def eval(self, variables: Dict[str, int]) -> str:
+        return self.value.eval(variables) + "CAST STRING\nPOP\n"
+
+    @classmethod
+    def keyword(cls) -> str:
+        return "string"
 
 # Get a map of all expressions' keywords to their class
 def is_expression_type(c):
@@ -123,9 +189,3 @@ expression_types = {
     if exp[1].keyword()
 }
 
-# Get a map of all atoms to their token types
-atom_types = {
-    exp[1].atom_type(): exp[1]
-    for exp in inspect.getmembers(sys.modules[__name__], is_expression_type)
-    if exp[1].atom_type()
-}

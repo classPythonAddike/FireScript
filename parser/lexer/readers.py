@@ -39,9 +39,16 @@ class FileReader(Reader):
     def current_line(self) -> str:
         pointer = 0
 
-        for pos, line in enumerate(self.code.split("\n")):
+        for line in self.code.split("\n"):
             pointer += len(line + "\n")
             if pointer >= self.pos:
                 return line
 
         return self.code.split("\n")[-1]
+
+
+class StringReader(FileReader):
+    def __init__(self, code: str):
+        self.pos = -1
+        self.code = code
+        
