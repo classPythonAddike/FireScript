@@ -1,4 +1,5 @@
 from typing import Tuple
+from parser.errors.errors import FParsingError
 
 from parser.lexer.tokens import *
 from parser.lexer.readers import Reader
@@ -58,37 +59,47 @@ class Lexer():
             current = self.reader.current_character()
 
             if current == "EOF":
-                return EOF("")
+                return EOF("", self.reader.current_line_number())
 
             if current == "\n":
-                return NewLine(current)
+                return NewLine(current, self.reader.current_line_number())
 
             if current.isspace():
                 continue
 
             elif current in "+-*/":
-                return Operator(current)
+                return Operator(current, self.reader.current_line_number())
             elif current == "=":
-                return EqualTo(current)
+                return EqualTo(current, self.reader.current_line_number())
 
             elif current in "()":
-                return Bracket(current)
+                return Bracket(current, self.reader.current_line_number())
             elif current in "[]":
-                return SquareBracket(current)
-            elif current in "{}":
-                return CurlyBracket(current)
+                return SquareBracket(current, self.reader.current_line_number())
             elif current in "<>":
-                return AngleBracket(current)
+                return AngleBracket(current, self.reader.current_line_number())
 
             elif current.isalpha():
                 ident = self.lex_identifier()
                 if ident in ["true", "false"]:
-                    return Bool(ident)
-                return Identifier(ident)
+                    return Bool(ident, self.reader.current_line_number())
+                return Identifier(ident, self.reader.current_line_number())
+
             elif current.isdigit():
                 numeric_type, value = self.lex_numeric()
-                return [Float, Integer][numeric_type == "int"](value)
+                return [Float, Integer][numeric_type == "int"](
+                    value,
+                    self.reader.current_line_number()
+                )
+
             elif current in "\"'":
-                return String(self.lex_string())
+                return String(self.lex_string(), self.reader.current_line_number())
+
+            else:
+                line = self.reader.current_line_number()
+                FParsingError(
+                    line,
+                    f"Unexpected '{current}' on line {line}!",
+                ).raise_error()
 
 

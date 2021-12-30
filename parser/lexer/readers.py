@@ -16,6 +16,12 @@ class Reader():
     def current_line(self) -> str:
         return ""
 
+    def current_line_number(self) -> int:
+        return 0
+
+    def from_line_number(self, _: int) -> str:
+        return ""
+
 
 class FileReader(Reader):
     def __init__(self, file: str):
@@ -35,20 +41,33 @@ class FileReader(Reader):
             return self.code[self.pos]
         else:
             return "EOF"
-    
+
     def current_line(self) -> str:
         pointer = 0
 
         for line in self.code.split("\n"):
             pointer += len(line + "\n")
-            if pointer >= self.pos:
+            if pointer > self.pos:
                 return line
 
         return self.code.split("\n")[-1]
+
+    def current_line_number(self) -> int:
+        pointer = 0
+
+        for pos, line in enumerate(self.code.split("\n")):
+            pointer += len(line + "\n")
+            if pointer >= self.pos:
+                return pos + 1
+
+        return len(self.code.split("\n"))
+
+    def from_line_number(self, number: int) -> str:
+        return self.code.split("\n")[number - 1] if 0 < number < len(self.code.split("\n")) - 1 else ""
 
 
 class StringReader(FileReader):
     def __init__(self, code: str):
         self.pos = -1
         self.code = code
-        
+

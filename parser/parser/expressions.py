@@ -2,12 +2,13 @@ import sys
 import inspect
 from typing import Dict
 
-from parser.lexer.tokens import Identifier
+from parser.errors.errors import FArgsError, FRedefineError
 
 
 class Expression():
-    def __init__(self, *args: 'Expression'):
+    def __init__(self, line: int, *args: 'Expression'):
         self.values = args
+        self.line = line
 
     def eval(self, variables: Dict[str, int]) -> str:
         """Outputs bytecode"""
@@ -79,14 +80,29 @@ class PutExp(Expression):
 
 
 class DefExp(Expression):
-    def __init__(self, *args):
-        self.variable: Identifier = args[0]
+    def __init__(self, line: int, *args):
+
+        if len(args) != 2:
+            FArgsError(
+                line,
+                f"Expected 2 arguments, got {len(args)}!"
+            ).raise_error()
+
+        self.variable = args[0]
         self.value: Expression = args[1]
+        self.line = line
 
     def eval(self, variables: Dict[str, int]) -> str:
-        # TODO: Raise error if variable has already been defined
+
+        if self.variable.value in variables:
+            FRedefineError(
+                self.variable.line,
+                f"Variable {self.variable.value} has been redefined!",
+            ).raise_error()
+        
         variables[self.variable.value] = len(variables)
         return f"{self.value.eval(variables)}STORE {len(variables) - 1}\nPOP\n"
+
 
     @classmethod
     def keyword(cls) -> str:
@@ -97,8 +113,9 @@ class DefExp(Expression):
 
 
 class AddExp(Expression):
-    def __init__(self, *args: Expression):
+    def __init__(self, line: int, *args: Expression):
         self.values = args
+        self.line = line
 
     def eval(self, variables: Dict[str, int]) -> str:
         return "".join(
@@ -114,9 +131,11 @@ class AddExp(Expression):
 
 
 class SubExp(Expression):
-    def __init__(self, *args: Expression):
+    def __init__(self, line: int, *args: Expression):
         self.lval = args[0]
         self.rval = args[1]
+
+        self.line = line
 
     def eval(self, variables: Dict[str, int]) -> str:
         return f"{self.rval.eval(variables)}{self.lval.eval(variables)}SUB\nPOP\nPOP\n"
@@ -152,8 +171,9 @@ class DivExp(SubExp):
 
 
 class IntTypeCast(Expression):
-    def __init__(self, *args: 'Expression'):
+    def __init__(self, line: int, *args: 'Expression'):
         self.value = args[0]
+        self.line = line
 
     def eval(self, variables: Dict[str, int]) -> str:
         return self.value.eval(variables) + "CAST INT\nPOP\n"

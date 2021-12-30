@@ -10,6 +10,7 @@ from parser.lexer.tokens import Token
 class IntExp(Expression):
     def __init__(self, *args: Token):
         self.value = int(args[0].value)
+        self.line = args[0].line
 
     def eval(self, _: Dict[str, int]) -> str:
         return f"PUSH INT {self.value}\n"
@@ -22,6 +23,7 @@ class IntExp(Expression):
 class FloatExp(Expression):
     def __init__(self, *args: Token):
         self.value = float(args[0].value)
+        self.line = args[0].line
 
     def eval(self, _: Dict[str, int]) -> str:
         return f"PUSH FLOAT {self.value}\n"
@@ -34,6 +36,7 @@ class FloatExp(Expression):
 class BoolExp(Expression):
     def __init__(self, *args: Token):
         self.value = int(args[0].value == "true")
+        self.line = args[0].line
 
     def eval(self, _: Dict[str, int]) -> str:
         return f"PUSH BOOL {self.value}\n"
@@ -46,6 +49,7 @@ class BoolExp(Expression):
 class StrExp(Expression):
     def __init__(self, *args: Token):
         self.value = args[0].value
+        self.line = args[0].line
 
     def eval(self, _: Dict[str, int]) -> str:
         """Push an array containing ascii codes of the characters"""
@@ -59,6 +63,7 @@ class StrExp(Expression):
 class VarExp(Expression):
     def __init__(self, *args: Token):
         self.value = args[0].value
+        self.line = args[0].line
 
     def eval(self, variables: Dict[str, int]) -> str:
         return f"LOAD {variables[self.value]}\n"

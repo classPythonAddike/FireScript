@@ -1,6 +1,7 @@
 class Token():
-    def __init__(self, value: str):
+    def __init__(self, value: str, line: int):
         self.value = value
+        self.line = line
     
     @property
     def type(self) -> str:
@@ -15,19 +16,22 @@ class Identifier(Token):
 
 
 class Integer(Token):
-    def __init__(self, value: str):
+    def __init__(self, value: str, line: int):
         self.value = int(value)
+        self.line = line
 
 class Float(Token):
-    def __init__(self, value: str):
+    def __init__(self, value: str, line: int):
         self.value = float(value)
+        self.line = line
 
 class String(Token):
     pass
 
 class Bool(Token):
-    def __init__(self, value: str):
+    def __init__(self, value: str, line: int):
         self.value = value
+        self.line = line
 
 
 class NewLine(Token):
@@ -47,9 +51,6 @@ class Bracket(Token): # ()
     pass
 
 class SquareBracket(Token): # []
-    pass
-
-class CurlyBracket(Token): # {}
     pass
 
 class AngleBracket(Token): # <>
