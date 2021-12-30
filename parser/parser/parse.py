@@ -63,22 +63,3 @@ class Parser():
             ).raise_error()
 
 
-# Testing purposes
-
-code = """
-(begin
-    (put 'Program to find volume of a sphere:')
-    (define r (float 100) )
-    (define pi 3.14 500)
-    (put
-        (+
-            "Area is"
-            (string (* (/ 4 3) pi r r r))
-        )
-    )
-)
-"""
-
-p = Parser(Lexer(StringReader(code)))
-print("Code:\n", p.lexer.reader.code, sep="", end="\n")
-print("Compiled Output:\n\n", p.parse_program().eval({}), sep="")
