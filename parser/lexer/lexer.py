@@ -4,7 +4,8 @@ from parser.errors.errors import FParsingError
 from parser.lexer.tokens import *
 from parser.lexer.readers import Reader
 
-class Lexer():
+
+class Lexer:
     def __init__(self, reader: Reader):
         self.reader = reader
 
@@ -28,7 +29,11 @@ class Lexer():
         while True:
             self.reader.advance_pointer()
             current = self.reader.current_character()
-            if not (current.isdigit() or (current == "." and is_int)) or current == "EOF":
+
+            if (
+                not (current.isdigit() or (current == "." and is_int))
+                or current == "EOF"
+            ):
                 self.reader.retreat_pointer()
                 return ["float", "int"][is_int], numeric
             else:
@@ -88,8 +93,7 @@ class Lexer():
             elif current.isdigit():
                 numeric_type, value = self.lex_numeric()
                 return [Float, Integer][numeric_type == "int"](
-                    value,
-                    self.reader.current_line_number()
+                    value, self.reader.current_line_number()
                 )
 
             elif current in "\"'":
@@ -101,5 +105,3 @@ class Lexer():
                     line,
                     f"Unexpected '{current}' on line {line}!",
                 ).raise_error()
-
-

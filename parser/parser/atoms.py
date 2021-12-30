@@ -8,25 +8,30 @@ from parser.lexer.tokens import Token
 
 # -------------------- Atoms --------------------
 
+
 class IntExp(Expression):
     def __init__(self, *args: Token):
 
         try:
             self.value = int(args[0].value)
         except:
-            FTypeError(
-                args[0].line,
-                "Couldn't parse integer!"
-            ).raise_error()
+            FTypeError(args[0].line, "Couldn't parse integer!").raise_error()
 
         self.line = args[0].line
+
+    def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
+        return variables
+
+    @property
+    def value_type(self) -> str:
+        return self.__class__.atom_type()
 
     def eval(self, _: Dict[str, int]) -> str:
         return f"PUSH INT {self.value}\n"
 
     @classmethod
     def atom_type(cls) -> str:
-        return 'Integer'
+        return "Integer"
 
 
 class FloatExp(Expression):
@@ -35,19 +40,23 @@ class FloatExp(Expression):
         try:
             self.value = float(args[0].value)
         except:
-            FTypeError(
-                args[0].line,
-                "Couldn't parse float!"
-            ).raise_error()
+            FTypeError(args[0].line, "Couldn't parse float!").raise_error()
 
         self.line = args[0].line
+
+    def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
+        return variables
 
     def eval(self, _: Dict[str, int]) -> str:
         return f"PUSH FLOAT {self.value}\n"
 
+    @property
+    def value_type(self) -> str:
+        return self.__class__.atom_type()
+
     @classmethod
     def atom_type(cls) -> str:
-        return 'Float'
+        return "Float"
 
 
 class BoolExp(Expression):
@@ -55,12 +64,19 @@ class BoolExp(Expression):
         self.value = int(args[0].value == "true")
         self.line = args[0].line
 
+    def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
+        return variables
+
     def eval(self, _: Dict[str, int]) -> str:
         return f"PUSH BOOL {self.value}\n"
 
+    @property
+    def value_type(self) -> str:
+        return self.__class__.atom_type()
+
     @classmethod
     def atom_type(cls) -> str:
-        return 'Bool'
+        return "Bool"
 
 
 class StrExp(Expression):
@@ -72,9 +88,16 @@ class StrExp(Expression):
         """Push an array containing ascii codes of the characters"""
         return f"PUSH STRING {' '.join([str(ord(i)) for i in self.value])}\n"
 
+    def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
+        return variables
+
     @classmethod
     def atom_type(cls) -> str:
-        return 'String'
+        return "String"
+
+    @property
+    def value_type(self) -> str:
+        return self.__class__.atom_type()
 
 
 class VarExp(Expression):
@@ -85,14 +108,21 @@ class VarExp(Expression):
     def eval(self, variables: Dict[str, int]) -> str:
         return f"LOAD {variables[self.value]}\n"
 
+    def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
+        self._value_type = variables[self.value]
+        return variables
+
     @classmethod
     def atom_type(cls) -> str:
-        return 'Identifier'
-
+        return "Identifier"
 
 
 def is_expression_type(c):
-    return inspect.isclass(c) and c.__module__ == is_expression_type.__module__ and c.__name__ != "Expression"
+    return (
+        inspect.isclass(c)
+        and c.__module__ == is_expression_type.__module__
+        and c.__name__ != "Expression"
+    )
 
 # Get a map of all atoms to their token types
 atom_types = {

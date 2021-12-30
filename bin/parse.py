@@ -10,7 +10,8 @@ from parser.lexer.readers import FileReader
 from parser.lexer.lexer import Lexer
 from parser.parser.parse import Parser
 
-bytecode = Parser(Lexer(FileReader(filename))).parse_program()
+parser = Parser(Lexer(FileReader(filename)))
+bytecode = parser.parse_program()
 
 out_file = ".".join(filename.split(".")[:-1]) + ".fsc"
 

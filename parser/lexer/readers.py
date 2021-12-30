@@ -1,6 +1,7 @@
 # Implement program readers - from file, stdin, etc
 
-class Reader():
+
+class Reader:
     def __init__(self):
         self.code = ""
 
@@ -29,12 +30,13 @@ class FileReader(Reader):
 
         with open(file, "r") as f:
             self.code = f.read()
-       
+
     def advance_pointer(self):
         self.pos += 1
 
     def retreat_pointer(self):
-        if self.pos > 0: self.pos -= 1
+        if self.pos > 0:
+            self.pos -= 1
 
     def current_character(self) -> str:
         if len(self.code) > self.pos >= 0:
@@ -63,11 +65,14 @@ class FileReader(Reader):
         return len(self.code.split("\n"))
 
     def from_line_number(self, number: int) -> str:
-        return self.code.split("\n")[number - 1] if 0 < number < len(self.code.split("\n")) - 1 else ""
+        return (
+            self.code.split("\n")[number - 1]
+            if 0 < number < len(self.code.split("\n"))
+            else ""
+        )
 
 
 class StringReader(FileReader):
     def __init__(self, code: str):
         self.pos = -1
         self.code = code
-
