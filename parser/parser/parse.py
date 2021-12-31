@@ -4,7 +4,7 @@ from parser.lexer.tokens import Token
 from parser.parser.expressions import Expression, Program
 from parser.parser.expression_models import atom_types, expression_types
 
-from parser.errors.errors import FArgsError, FProgramError, FSyntaxError, initialise_reader
+from parser.errors.errors import FArgsError, FProgramError, FSyntaxError, FNameError, initialise_reader
 
 from typing import List, Union
 
@@ -74,6 +74,9 @@ class Parser:
             else:
                 # Undefined keyword
                 # TODO: Proper error
+                raise FNameError(tokens[0].line,
+                        f"{tokens[0].value} is not a valid keyword not a variable"
+                    ).raise_error()
                 exit(-1)
         elif tokens.type in atom_types:
             return atom_types[tokens.type](tokens)

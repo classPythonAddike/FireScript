@@ -90,3 +90,9 @@ class FArgsError(FException):
     @property
     def prefix(self) -> str:
         return "Error encountered - Incorrect number of arguments provided!"
+
+
+class FNameError(FException):
+    @property
+    def prefix(self) -> str:
+        return "Error encountered - Term is not a valid keyword!"

@@ -53,6 +53,8 @@ class Lexer:
             # TODO: Raise error on finding newline/EOF
             if current == quote:
                 return string
+            elif current == '\n' or current == 'EOF':
+                raise EOF("EOF while scanning string")
             else:
                 string += current
 
