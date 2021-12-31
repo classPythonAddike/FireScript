@@ -72,8 +72,9 @@ class Parser:
                     tokens[0].line, *[self.parse(tok) for tok in tokens[1:]]
                 )
             else:
-                raise FKeyWordError(
-                    tokens[0].line, f"`{tokens[0].value}` is neither a valid keyword nor a variable!"
+                FKeyWordError(
+                    tokens[0].line, 
+                    f"`{tokens[0].value}` is neither a valid keyword nor a variable!"
                     ).raise_error()
 
         elif tokens.type in atom_types:
