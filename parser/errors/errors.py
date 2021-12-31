@@ -92,7 +92,7 @@ class FArgsError(FException):
         return "Error encountered - Incorrect number of arguments provided!"
 
 
-class FKeyWordError(FException):
+class FKeywordError(FException):
     @property
     def prefix(self) -> str:
         return "Error encountered - Unexpected Identifier!"
