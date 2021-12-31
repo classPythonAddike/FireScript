@@ -66,10 +66,7 @@ class Lexer:
             if current == "EOF":
                 return EOF("", self.reader.current_line_number())
 
-            if current == "\n":
-                return NewLine(current, self.reader.current_line_number())
-
-            if current.isspace():
+            if current.isspace() or current == "\n":
                 continue
 
             elif current in "+-*/":

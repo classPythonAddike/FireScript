@@ -62,10 +62,22 @@ class FParsingError(FException):
         return "Error while parsing program!"
 
 
+class FProgramError(FException):
+    @property
+    def prefix(self) -> str:
+        return "Program did not start with a `(begin ...)`!"
+
+
+class FNotDefinedError(FException):
+    @property
+    def prefix(self) -> str:
+        return "Error encountered - Variable has not been defined!"
+
+
 class FRedefineError(FException):
     @property
     def prefix(self) -> str:
-        return "Variable has been redefined!"
+        return "Error encountered - Variable has been redefined!"
 
 
 class FTypeError(FException):

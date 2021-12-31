@@ -1,8 +1,8 @@
 from typing import Dict
+from parser.errors.errors import FNotDefinedError, FSyntaxError, FTypeError
+from parser.parser.expression_models.atoms import VarExp
 
 from parser.parser.expressions import Expression
-from parser.errors.errors import FRedefineError
-
 
 
 # -------------------- Simple Expressions --------------------
@@ -44,38 +44,45 @@ class PutExp(Expression):
         return "put"
 
 
-class DefExp(Expression):
+class GetExp(Expression):
+    """Get input from user into a specified variable"""
     def __init__(self, line: int, *args):
-
-        self.variable = args[0]
-        self.value: Expression = args[1]
         self.line = line
+        self.variable = args[0]
 
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
-        self._load_type = "None"
-        variables[self.variable.value] = self.value.value_type
+        if not isinstance(self.variable, VarExp):
+            FSyntaxError(
+                self.line,
+                "Argument to `get` must be a variable of type String!"
+            ).raise_error()
+
+        if self.variable.value not in variables:
+            FNotDefinedError(
+                self.line,
+                f"Variable `{self.variable.value}` is not defined!"
+            ).raise_error()
+
+        variables = self.variable.load_type(variables)
+       
+        if self.variable.value_type != "String":
+            FTypeError(
+                self.line,
+                f"`get` returns a String, but `{self.variable.value}` is of type {self.variable.value_type}!"
+            ).raise_error()
+
+
+
+        self._value_type = "None"
         return variables
 
     def eval(self, variables: Dict[str, int]) -> str:
-
-        if self.variable.value in variables:
-            FRedefineError(
-                self.variable.line,
-                f"Variable {self.variable.value} has been redefined!",
-            ).raise_error()
-
-        variables[self.variable.value] = len(variables)
-        return f"{self.value.eval(variables)}STORE {len(variables) - 1}\nPOP\n"
-
-    @classmethod
-    def num_args(cls) -> int:
-        return 2
+        return f"GET\nSTORE {variables[self.variable.value]}\nPOP\n"
 
     @classmethod
     def keyword(cls) -> str:
-        return "define"
+        return "get"
 
-    @property
-    def value_type(self) -> str:
-        return "None"
-
+    @classmethod
+    def num_args(cls) -> int:
+        return 1

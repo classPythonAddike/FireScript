@@ -4,7 +4,7 @@ from parser.lexer.tokens import Token
 from parser.parser.expressions import Expression, Program
 from parser.parser.expression_models import atom_types, expression_types
 
-from parser.errors.errors import FArgsError, FSyntaxError, initialise_reader
+from parser.errors.errors import FArgsError, FProgramError, FSyntaxError, initialise_reader
 
 from typing import List, Union
 
@@ -24,7 +24,14 @@ class Parser:
             if next_token.type != "NewLine":
                 tokens.append(next_token)
 
-        program: Program = self.parse(self.parse_raw(tokens))
+        program = self.parse(self.parse_raw(tokens))
+
+        if not isinstance(program, Program):
+            FProgramError(
+                1,
+                "All FireScript programs must be of the form `(begin ...)`!"
+            ).raise_error()
+
         self.check_typing(program)
 
         return program.eval({})
@@ -47,7 +54,7 @@ class Parser:
         else:
             return token
 
-    def parse(self, tokens: Union[List, Token]) -> Expression:
+    def parse(self, tokens: Union[List, Token]) -> Union[Program, Expression]:
         if isinstance(tokens, list):
             if tokens[0].value in expression_types:
 

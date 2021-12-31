@@ -37,11 +37,6 @@ class Bool(Token):
         self.line = line
 
 
-class NewLine(Token):
-    def __repr__(self) -> str:
-        return f"<Token {self.type}: \\n>"
-
-
 class Operator(Token):
     pass
 
