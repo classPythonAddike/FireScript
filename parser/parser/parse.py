@@ -4,7 +4,7 @@ from parser.lexer.tokens import Token
 from parser.parser.expressions import Expression, Program
 from parser.parser.expression_models import atom_types, expression_types
 
-from parser.errors.errors import FArgsError, FProgramError, FSyntaxError, FKeyWordError, initialise_reader
+from parser.errors.errors import FArgsError, FProgramError, FSyntaxError, FKeywordError, initialise_reader
 
 from typing import List, Union
 
