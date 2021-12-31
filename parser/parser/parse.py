@@ -75,7 +75,7 @@ class Parser:
                 # Undefined keyword
                 # TODO: Proper error
                 raise FNameError(tokens[0].line,
-                        f"{tokens[0].value} is not a valid keyword not a variable"
+                        f"{tokens[0].value} is neither a valid keyword nor a variable"
                     ).raise_error()
                 exit(-1)
         elif tokens.type in atom_types:
