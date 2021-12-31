@@ -1,5 +1,5 @@
 from typing import Tuple
-from parser.errors.errors import FParsingError
+from parser.errors.errors import FParsingError, FEOFError
 
 from parser.lexer.tokens import *
 from parser.lexer.readers import Reader
@@ -44,7 +44,7 @@ class Lexer:
     def lex_string(self) -> str:
         quote = self.reader.current_character()
         string = ""
-
+        
         while True:
 
             self.reader.advance_pointer()
@@ -53,6 +53,11 @@ class Lexer:
             # TODO: Raise error on finding newline/EOF
             if current == quote:
                 return string
+            elif current == '\n' or current == 'EOF':
+                FEOFError(
+                    self.reader.current_line_number(),
+                    'EOF while scanning string!'
+                ).raise_error()
             else:
                 string += current
 
