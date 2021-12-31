@@ -44,7 +44,7 @@ class Lexer:
     def lex_string(self) -> str:
         quote = self.reader.current_character()
         string = ""
-        line = self.reader.current_line_number()
+        
         while True:
 
             self.reader.advance_pointer()
@@ -55,7 +55,7 @@ class Lexer:
                 return string
             elif current == '\n' or current == 'EOF':
                 FEOFError(
-                    line,
+                    self.reader.current_line_number(),
                     'EOF while scanning string!'
                 ).raise_error()
             else:
