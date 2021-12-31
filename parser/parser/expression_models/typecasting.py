@@ -1,7 +1,7 @@
 from parser.errors.errors import FArgsError
 from parser.parser.expressions import Expression
 
-from typing import Dict
+from typing import Dict, List
 
 # -------------------- TypeCasting --------------------
 
@@ -21,8 +21,8 @@ class IntTypeCast(Expression):
     def value_type(self) -> str:
         return "Integer"
 
-    def eval(self, variables: Dict[str, int]) -> str:
-        return self.value.eval(variables) + "CAST INT\nPOP\n"
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
+        return [*self.value.eval(variables)] + [["CAST", "INT"], ["POP"]]
 
     @classmethod
     def num_args(cls) -> int:
@@ -34,8 +34,8 @@ class IntTypeCast(Expression):
 
 
 class FloatTypeCast(IntTypeCast):
-    def eval(self, variables: Dict[str, int]) -> str:
-        return self.value.eval(variables) + "CAST FLOAT\nPOP\n"
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
+        return [*self.value.eval(variables)] + [["CAST", "FLOAT"], ["POP"]]
 
     @classmethod
     def keyword(cls) -> str:
@@ -47,8 +47,8 @@ class FloatTypeCast(IntTypeCast):
 
 
 class StrTypeCast(IntTypeCast):
-    def eval(self, variables: Dict[str, int]) -> str:
-        return self.value.eval(variables) + "CAST STRING\nPOP\n"
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
+        return [*self.value.eval(variables)] + [["CAST", "STRING"], ["POP"]]
 
     @classmethod
     def keyword(cls) -> str:

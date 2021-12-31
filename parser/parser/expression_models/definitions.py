@@ -1,7 +1,7 @@
 from parser.parser.expressions import Expression
 from parser.errors.errors import FNotDefinedError, FRedefineError, FTypeError
 
-from typing import Dict
+from typing import Dict, List
 
 
 class DefExp(Expression):
@@ -24,9 +24,9 @@ class DefExp(Expression):
         variables[self.variable.value] = self.value.value_type
         return variables
 
-    def eval(self, variables: Dict[str, int]) -> str:
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         variables[self.variable.value] = len(variables)
-        return f"{self.value.eval(variables)}STORE {len(variables) - 1}\nPOP\n"
+        return [*self.value.eval(variables)] + [["STORE", str(len(variables) - 1)], ["POP"]]
 
     @classmethod
     def num_args(cls) -> int:
@@ -66,8 +66,8 @@ class AssignExp(Expression):
         variables[self.variable.value] = self.value.value_type
         return variables
 
-    def eval(self, variables: Dict[str, int]) -> str:
-        return f"{self.value.eval(variables)}STORE {variables[self.variable.value]}\nPOP\n"
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
+        return [*self.value.eval(variables)] + [["STORE", str(variables[self.variable.value])], ["POP"]]
 
     @classmethod
     def num_args(cls) -> int:

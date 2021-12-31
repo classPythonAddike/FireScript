@@ -13,7 +13,7 @@ class Parser:
         self.lexer = lexer
         initialise_reader(self.lexer.reader)
 
-    def parse_program(self) -> str:
+    def parse_program(self) -> List:
         tokens: List[Token] = []
 
         while True:

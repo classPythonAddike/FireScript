@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 from parser.errors.errors import FNotDefinedError, FSyntaxError, FTypeError
 from parser.parser.expression_models.atoms import VarExp
 
@@ -11,8 +11,11 @@ from parser.parser.expressions import Expression
 class PrintExp(Expression):
     """Print an expression without a newline"""
 
-    def eval(self, variables: Dict[str, int]) -> str:
-        return "".join([exp.eval(variables) + "PRINT\nPOP\n" for exp in self.values])
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
+        return sum(
+            [[*exp.eval(variables)] + [["PRINT"], ["POP"]] for exp in self.values],
+            []
+        )
 
     @property
     def value_type(self) -> str:
@@ -26,13 +29,14 @@ class PrintExp(Expression):
 class PutExp(Expression):
     """Print an expression, with a newline"""
 
-    def eval(self, variables: Dict[str, int]) -> str:
-        return "".join(
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
+        return sum(
             [
-                exp.eval(variables)
-                + f"{'PUT' if pos == len(self.values) - 1 else 'PRINT'}\n"
+                [*exp.eval(variables)]
+                + [['PUT' if pos == len(self.values) - 1 else 'PRINT'], ['POP']]
                 for pos, exp in enumerate(self.values)
-            ]
+            ],
+            []
         )
 
     @property

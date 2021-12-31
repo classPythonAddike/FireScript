@@ -1,11 +1,5 @@
-from typing import Dict
+from typing import Dict, List
 
-
-"""
-FireScript's runtime uses something similar to a stack.
-When an object is pushed/loaded, it is placed onto the stack.
-But when an object is popped, it is popped from the second position from the top.
-"""
 
 # -------------------- Expressions --------------------
 # Expressions can be broken down into a simpler form
@@ -16,9 +10,9 @@ class Expression:
         self.values = args
         self.line = line
 
-    def eval(self, variables: Dict[str, int]) -> str:
+    def eval(self, variables: Dict[str, int]) -> List[List]:
         """Outputs bytecode"""
-        return "".join([exp.eval(variables) for exp in self.values])
+        return sum([exp.eval(variables) for exp in self.values], [])
 
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
         """
