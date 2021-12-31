@@ -1,6 +1,8 @@
 (begin
     (define pi 3.141592)
 
+    (print "Enter the radius of the sphere: ")
+
     (define radius "")
     (get radius)
     (define r (float radius))
