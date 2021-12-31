@@ -75,7 +75,7 @@ class Parser:
                 FKeywordError(
                     tokens[0].line, 
                     f"`{tokens[0].value}` is neither a valid keyword nor a variable!"
-                    ).raise_error()
+                ).raise_error()
 
         elif tokens.type in atom_types:
             return atom_types[tokens.type](tokens)
