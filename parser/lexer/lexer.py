@@ -54,7 +54,7 @@ class Lexer:
             if current == quote:
                 return string
             elif current == '\n' or current == 'EOF':
-                raise FEOFError('EOF while scannin string')
+                raise FEOFError('EOF while scanning string!')
             else:
                 string += current
 
