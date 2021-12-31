@@ -1,5 +1,5 @@
 from typing import Tuple
-from parser.errors.errors import FParsingError
+from parser.errors.errors import FParsingError, FEOFError
 
 from parser.lexer.tokens import *
 from parser.lexer.readers import Reader
@@ -54,7 +54,7 @@ class Lexer:
             if current == quote:
                 return string
             elif current == '\n' or current == 'EOF':
-                raise EOF("EOF while scanning string")
+                raise FEOFError('EOF while scannin string')
             else:
                 string += current
 

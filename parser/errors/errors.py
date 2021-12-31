@@ -92,7 +92,12 @@ class FArgsError(FException):
         return "Error encountered - Incorrect number of arguments provided!"
 
 
-class FNameError(FException):
+class FKeyWordError(FException):
     @property
     def prefix(self) -> str:
         return "Error encountered - Term is not a valid keyword!"
+    
+class FEOFError(FException):
+    @property
+    def prefix(self) -> str:
+        return "Error encountered - Unexpected EOF!"
