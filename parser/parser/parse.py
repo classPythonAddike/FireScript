@@ -1,13 +1,12 @@
-from typing import List, Union
-
 from parser.lexer.lexer import Lexer
 from parser.lexer.tokens import Token
 
-from parser.parser.atoms import atom_types
-from parser.parser.expressions import Expression, Program, expression_types
+from parser.parser.expressions import Expression, Program
+from parser.parser.expression_models import atom_types, expression_types
 
 from parser.errors.errors import FArgsError, FSyntaxError, initialise_reader
 
+from typing import List, Union
 
 class Parser:
     def __init__(self, lexer: Lexer):
@@ -25,7 +24,7 @@ class Parser:
             if next_token.type != "NewLine":
                 tokens.append(next_token)
 
-        program = self.parse(self.parse_raw(tokens))
+        program: Program = self.parse(self.parse_raw(tokens))
         self.check_typing(program)
 
         return program.eval({})

@@ -1,5 +1,3 @@
-import sys
-import inspect
 from typing import Dict
 from parser.errors.errors import FTypeError
 
@@ -116,17 +114,3 @@ class VarExp(Expression):
     def atom_type(cls) -> str:
         return "Identifier"
 
-
-def is_expression_type(c):
-    return (
-        inspect.isclass(c)
-        and c.__module__ == is_expression_type.__module__
-        and c.__name__ != "Expression"
-    )
-
-# Get a map of all atoms to their token types
-atom_types = {
-    exp[1].atom_type(): exp[1]
-    for exp in inspect.getmembers(sys.modules[__name__], is_expression_type)
-    if exp[1].atom_type()
-}
