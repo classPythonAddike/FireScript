@@ -1,5 +1,6 @@
-from parser.errors.errors import FArgsError, FTypeError
 from parser.parser.expressions import Expression
+from parser.bytecode.opcodes import OpCodes
+from parser.errors.errors import FArgsError, FTypeError
 
 from typing import Dict, List
 
@@ -19,11 +20,12 @@ class AddExp(Expression):
         self.values = args
         self.line = line
 
-    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
-        return sum(
-            [val.eval(variables) for val in self.values],
-            []
-        ) + [["ADD"], ["POP"], ["POP"]] * (len(self.values) - 1)
+    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+        return sum([val.eval(variables) for val in self.values], []) + [
+            [OpCodes.ADD],
+            [OpCodes.POP],
+            [OpCodes.POP],
+        ] * (len(self.values) - 1)
 
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
         for val in self.values:
@@ -65,8 +67,12 @@ class SubExp(Expression):
         self._value_type = self.lval.value_type
         return variables
 
-    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
-        return [*self.rval.eval(variables)] + [*self.lval.eval(variables)] + [["SUB"], ["POP"], ["POP"]]
+    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+        return (
+            [*self.rval.eval(variables)]
+            + [*self.lval.eval(variables)]
+            + [[OpCodes.SUB], [OpCodes.POP], [OpCodes.POP]]
+        )
 
     @classmethod
     def num_args(cls) -> int:
@@ -78,11 +84,12 @@ class SubExp(Expression):
 
 
 class MulExp(AddExp):
-    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
-        return sum(
-            [val.eval(variables) for val in self.values],
-            []
-        ) + [["MUL"], ["POP"], ["POP"]] * (len(self.values) - 1)
+    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+        return sum([val.eval(variables) for val in self.values], []) + [
+            [OpCodes.MUL],
+            [OpCodes.POP],
+            [OpCodes.POP],
+        ] * (len(self.values) - 1)
 
     @classmethod
     def keyword(cls) -> str:
@@ -90,11 +97,13 @@ class MulExp(AddExp):
 
 
 class DivExp(SubExp):
-    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
-        return [*self.rval.eval(variables)] + [*self.lval.eval(variables)] + [["DIV"], ["POP"], ["POP"]]
+    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+        return (
+            [*self.rval.eval(variables)]
+            + [*self.lval.eval(variables)]
+            + [[OpCodes.DIV], [OpCodes.POP], [OpCodes.POP]]
+        )
 
     @classmethod
     def keyword(cls) -> str:
         return "/"
-
-

@@ -1,6 +1,7 @@
 from typing import Dict, List
 from parser.errors.errors import FTypeError
 
+from parser.bytecode.opcodes import OpCodes
 from parser.parser.expressions import Expression
 from parser.lexer.tokens import Token
 
@@ -24,8 +25,9 @@ class IntExp(Expression):
     def value_type(self) -> str:
         return self.__class__.atom_type()
 
-    def eval(self, _: Dict[str, int]) -> List[List[str]]:
-        return [["PUSH", "INT", str(self.value)]]
+    def eval(self, _: Dict[str, int]) -> List[List[int]]:
+        """PUSH, INT, +ve / -ve, integer"""
+        return [[OpCodes.PUSH, OpCodes.INT, int(self.value >= 0), self.value]]
 
     @classmethod
     def atom_type(cls) -> str:
@@ -45,8 +47,16 @@ class FloatExp(Expression):
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
         return variables
 
-    def eval(self, _: Dict[str, int]) -> List[List[str]]:
-        return [["PUSH", "FLOAT", str(self.value)]]
+    def eval(self, _: Dict[str, int]) -> List[List[int]]:
+        return [
+            [
+                OpCodes.PUSH,
+                OpCodes.FLOAT,
+                int(self.value >= 0),
+                int(self.value // 1),
+                int(str(self.value % 1)[2:]),
+            ]
+        ]
 
     @property
     def value_type(self) -> str:
@@ -65,8 +75,8 @@ class BoolExp(Expression):
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
         return variables
 
-    def eval(self, _: Dict[str, int]) -> List[List[str]]:
-        return [["PUSH", "BOOL", str(self.value)]]
+    def eval(self, _: Dict[str, int]) -> List[List[int]]:
+        return [[OpCodes.PUSH, OpCodes.BOOL, self.value]]
 
     @property
     def value_type(self) -> str:
@@ -82,9 +92,9 @@ class StrExp(Expression):
         self.value = args[0].value
         self.line = args[0].line
 
-    def eval(self, _: Dict[str, int]) -> List[List[str]]:
+    def eval(self, _: Dict[str, int]) -> List[List[int]]:
         """Push an array containing ascii codes of the characters"""
-        return [["PUSH", "STRING"]] + [[str(ord(i)) for i in self.value]]
+        return [[OpCodes.PUSH, OpCodes.STRING] + [ord(i) for i in self.value]]
 
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
         return variables
@@ -103,8 +113,8 @@ class VarExp(Expression):
         self.value = args[0].value
         self.line = args[0].line
 
-    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
-        return [["LOAD", str(variables[self.value])]]
+    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+        return [[OpCodes.LOAD, variables[self.value]]]
 
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
         self._value_type = variables[self.value]
@@ -113,4 +123,3 @@ class VarExp(Expression):
     @classmethod
     def atom_type(cls) -> str:
         return "Identifier"
-

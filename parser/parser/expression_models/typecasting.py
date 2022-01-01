@@ -1,9 +1,11 @@
+from parser.bytecode.opcodes import OpCodes
 from parser.errors.errors import FArgsError
 from parser.parser.expressions import Expression
 
 from typing import Dict, List
 
 # -------------------- TypeCasting --------------------
+
 
 class IntTypeCast(Expression):
     def __init__(self, line: int, *args: "Expression"):
@@ -21,8 +23,11 @@ class IntTypeCast(Expression):
     def value_type(self) -> str:
         return "Integer"
 
-    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
-        return [*self.value.eval(variables)] + [["CAST", "INT"], ["POP"]]
+    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+        return [*self.value.eval(variables)] + [
+            [OpCodes.CAST, OpCodes.INT],
+            [OpCodes.POP],
+        ]
 
     @classmethod
     def num_args(cls) -> int:
@@ -34,8 +39,11 @@ class IntTypeCast(Expression):
 
 
 class FloatTypeCast(IntTypeCast):
-    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
-        return [*self.value.eval(variables)] + [["CAST", "FLOAT"], ["POP"]]
+    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+        return [*self.value.eval(variables)] + [
+            [OpCodes.CAST, OpCodes.FLOAT],
+            [OpCodes.POP],
+        ]
 
     @classmethod
     def keyword(cls) -> str:
@@ -47,8 +55,11 @@ class FloatTypeCast(IntTypeCast):
 
 
 class StrTypeCast(IntTypeCast):
-    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
-        return [*self.value.eval(variables)] + [["CAST", "STRING"], ["POP"]]
+    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+        return [*self.value.eval(variables)] + [
+            [OpCodes.CAST, OpCodes.STRING],
+            [OpCodes.POP],
+        ]
 
     @classmethod
     def keyword(cls) -> str:
@@ -57,5 +68,3 @@ class StrTypeCast(IntTypeCast):
     @property
     def value_type(self) -> str:
         return "String"
-
-

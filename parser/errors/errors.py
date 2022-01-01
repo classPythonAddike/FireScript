@@ -33,7 +33,9 @@ class FException:
                 f"   {str(line_nos[0]).rjust(margin_width, ' ')}. | {_r.from_line_number(self.line_number - 1)}"
             )
         print(f"-> {str(line_nos[1]).rjust(margin_width, ' ')}. | {self.line}")
-        print(f"   {str(line_nos[2]).rjust(margin_width, ' ')}. | {_r.from_line_number(self.line_number + 1)}")
+        print(
+            f"   {str(line_nos[2]).rjust(margin_width, ' ')}. | {_r.from_line_number(self.line_number + 1)}"
+        )
         print(f"{Colors.RED}{self.type}: {self.message}{Colors.CLEAR}")
 
         exit(-1)
@@ -96,7 +98,8 @@ class FKeywordError(FException):
     @property
     def prefix(self) -> str:
         return "Error encountered - Unexpected Identifier!"
-    
+
+
 class FEOFError(FException):
     @property
     def prefix(self) -> str:

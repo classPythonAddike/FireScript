@@ -4,9 +4,16 @@ from parser.lexer.tokens import Token
 from parser.parser.expressions import Expression, Program
 from parser.parser.expression_models import atom_types, expression_types
 
-from parser.errors.errors import FArgsError, FProgramError, FSyntaxError, FKeywordError, initialise_reader
+from parser.errors.errors import (
+    FArgsError,
+    FProgramError,
+    FSyntaxError,
+    FKeywordError,
+    initialise_reader,
+)
 
 from typing import List, Union
+
 
 class Parser:
     def __init__(self, lexer: Lexer):
@@ -28,8 +35,7 @@ class Parser:
 
         if not isinstance(program, Program):
             FProgramError(
-                1,
-                "All FireScript programs must be of the form `(begin ...)`!"
+                1, "All FireScript programs must be of the form `(begin ...)`!"
             ).raise_error()
 
         self.check_typing(program)
@@ -73,8 +79,8 @@ class Parser:
                 )
             else:
                 FKeywordError(
-                    tokens[0].line, 
-                    f"`{tokens[0].value}` is neither a valid keyword nor a variable!"
+                    tokens[0].line,
+                    f"`{tokens[0].value}` is neither a valid keyword nor a variable!",
                 ).raise_error()
 
         elif tokens.type in atom_types:
