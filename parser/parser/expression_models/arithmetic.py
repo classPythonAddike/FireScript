@@ -20,7 +20,7 @@ class AddExp(Expression):
         self.values = args
         self.line = line
 
-    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return sum([val.eval(variables) for val in self.values], []) + [
             [OpCodes.ADD],
             [OpCodes.POP],
@@ -67,7 +67,7 @@ class SubExp(Expression):
         self._value_type = self.lval.value_type
         return variables
 
-    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return (
             [*self.rval.eval(variables)]
             + [*self.lval.eval(variables)]
@@ -84,7 +84,7 @@ class SubExp(Expression):
 
 
 class MulExp(AddExp):
-    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return sum([val.eval(variables) for val in self.values], []) + [
             [OpCodes.MUL],
             [OpCodes.POP],
@@ -97,7 +97,7 @@ class MulExp(AddExp):
 
 
 class DivExp(SubExp):
-    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return (
             [*self.rval.eval(variables)]
             + [*self.lval.eval(variables)]

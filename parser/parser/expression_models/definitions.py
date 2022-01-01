@@ -25,10 +25,10 @@ class DefExp(Expression):
         variables[self.variable.value] = self.value.value_type
         return variables
 
-    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         variables[self.variable.value] = len(variables)
         return [*self.value.eval(variables)] + [
-            [OpCodes.STORE, len(variables) - 1],
+            [OpCodes.STORE, str(len(variables) - 1)],
             [OpCodes.POP],
         ]
 
@@ -69,9 +69,9 @@ class AssignExp(Expression):
         variables[self.variable.value] = self.value.value_type
         return variables
 
-    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return [*self.value.eval(variables)] + [
-            [OpCodes.STORE, variables[self.variable.value]],
+            [OpCodes.STORE, str(variables[self.variable.value])],
             [OpCodes.POP],
         ]
 

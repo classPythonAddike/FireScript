@@ -12,7 +12,7 @@ from parser.errors.errors import FNotDefinedError, FSyntaxError, FTypeError
 class PrintExp(Expression):
     """Print an expression without a newline"""
 
-    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return sum(
             [
                 [*exp.eval(variables)] + [[OpCodes.PRINT], [OpCodes.POP]]
@@ -33,7 +33,7 @@ class PrintExp(Expression):
 class PutExp(Expression):
     """Print an expression, with a newline"""
 
-    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return sum(
             [
                 [*exp.eval(variables)]
@@ -84,10 +84,10 @@ class GetExp(Expression):
         self._value_type = "None"
         return variables
 
-    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return [
             [OpCodes.GET],
-            [OpCodes.STORE, variables[self.variable.value]],
+            [OpCodes.STORE, str(variables[self.variable.value])],
             [OpCodes.POP],
         ]
 

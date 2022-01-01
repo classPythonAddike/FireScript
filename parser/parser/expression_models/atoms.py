@@ -25,9 +25,9 @@ class IntExp(Expression):
     def value_type(self) -> str:
         return self.__class__.atom_type()
 
-    def eval(self, _: Dict[str, int]) -> List[List[int]]:
+    def eval(self, _: Dict[str, int]) -> List[List[str]]:
         """PUSH, INT, +ve / -ve, integer"""
-        return [[OpCodes.PUSH, OpCodes.INT, int(self.value >= 0), self.value]]
+        return [[OpCodes.PUSH, OpCodes.INT, str(self.value)]]
 
     @classmethod
     def atom_type(cls) -> str:
@@ -47,16 +47,8 @@ class FloatExp(Expression):
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
         return variables
 
-    def eval(self, _: Dict[str, int]) -> List[List[int]]:
-        return [
-            [
-                OpCodes.PUSH,
-                OpCodes.FLOAT,
-                int(self.value >= 0),
-                int(self.value // 1),
-                int(str(self.value % 1)[2:]),
-            ]
-        ]
+    def eval(self, _: Dict[str, int]) -> List[List[str]]:
+        return [[OpCodes.PUSH, OpCodes.FLOAT, str(self.value)]]
 
     @property
     def value_type(self) -> str:
@@ -75,8 +67,8 @@ class BoolExp(Expression):
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
         return variables
 
-    def eval(self, _: Dict[str, int]) -> List[List[int]]:
-        return [[OpCodes.PUSH, OpCodes.BOOL, self.value]]
+    def eval(self, _: Dict[str, int]) -> List[List[str]]:
+        return [[OpCodes.PUSH, OpCodes.BOOL, str(self.value)]]
 
     @property
     def value_type(self) -> str:
@@ -92,9 +84,9 @@ class StrExp(Expression):
         self.value = args[0].value
         self.line = args[0].line
 
-    def eval(self, _: Dict[str, int]) -> List[List[int]]:
+    def eval(self, _: Dict[str, int]) -> List[List[str]]:
         """Push an array containing ascii codes of the characters"""
-        return [[OpCodes.PUSH, OpCodes.STRING] + [ord(i) for i in self.value]]
+        return [[OpCodes.PUSH, OpCodes.STRING] + [str(ord(i)) for i in self.value]]
 
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
         return variables
@@ -113,8 +105,8 @@ class VarExp(Expression):
         self.value = args[0].value
         self.line = args[0].line
 
-    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
-        return [[OpCodes.LOAD, variables[self.value]]]
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
+        return [[OpCodes.LOAD, str(variables[self.value])]]
 
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
         self._value_type = variables[self.value]

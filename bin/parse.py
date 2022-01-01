@@ -21,5 +21,5 @@ bytecode = to_byte_code(parser.parse_program())
 
 out_file = ".".join(filename.split(".")[:-1]) + ".fsc"
 
-with open(out_file, "wb") as f:
+with open(out_file, "w") as f:
     f.write(bytecode)

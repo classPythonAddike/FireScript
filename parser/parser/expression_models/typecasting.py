@@ -23,7 +23,7 @@ class IntTypeCast(Expression):
     def value_type(self) -> str:
         return "Integer"
 
-    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return [*self.value.eval(variables)] + [
             [OpCodes.CAST, OpCodes.INT],
             [OpCodes.POP],
@@ -39,7 +39,7 @@ class IntTypeCast(Expression):
 
 
 class FloatTypeCast(IntTypeCast):
-    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return [*self.value.eval(variables)] + [
             [OpCodes.CAST, OpCodes.FLOAT],
             [OpCodes.POP],
@@ -55,7 +55,7 @@ class FloatTypeCast(IntTypeCast):
 
 
 class StrTypeCast(IntTypeCast):
-    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return [*self.value.eval(variables)] + [
             [OpCodes.CAST, OpCodes.STRING],
             [OpCodes.POP],

@@ -10,7 +10,7 @@ class Expression:
         self.values = args
         self.line = line
 
-    def eval(self, variables: Dict[str, int]) -> List[List[int]]:
+    def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         """Outputs bytecode"""
         return sum([exp.eval(variables) for exp in self.values], [])
 

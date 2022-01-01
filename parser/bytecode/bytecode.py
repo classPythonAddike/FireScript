@@ -1,15 +1,15 @@
-from parser.bytecode.opcodes import OpCodes
-
 from typing import List
 
+from parser.bytecode.opcodes import OpCodes
 
-def to_byte_code(codes: List[List[int]]) -> bytearray:
 
-    bytecode = bytearray()
+def to_byte_code(codes: List[List[str]]) -> str:
+
+    bytecode = ""
 
     for instruction in codes:
         for arg in instruction:
-            bytecode.append(arg)
-        bytecode.append(OpCodes.SEP)
+            bytecode += arg + " "
+        bytecode += OpCodes.SEP + " "
 
-    return bytecode
+    return bytecode.strip() + "\n"

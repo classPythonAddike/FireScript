@@ -1,13 +1,13 @@
-class Auto:
-    counter = 0
+class Auto():
+    counter = -1
 
     @classmethod
-    def auto(cls) -> int:
+    def auto(cls) -> str:
         cls.counter += 1
-        return cls.counter
+        return str(cls.counter)
 
 
-class OpCodes:
+class OpCodes():
     PUSH = Auto.auto()
     POP = Auto.auto()
     STORE = Auto.auto()
