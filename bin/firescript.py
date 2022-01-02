@@ -14,7 +14,7 @@ def cli():
 def build(file: str):
     """Parses a provided FireScript file, and outputs pseudo bytecode."""
     parser = Parser(Lexer(FileReader(file)))
-    bytecode = to_byte_code(parser.parse_program())
+    bytecode = to_byte_code(parser.parse_program().eval({}))
 
     out_file = ".".join(file.split(".")[:-1]) + ".fsc"
 

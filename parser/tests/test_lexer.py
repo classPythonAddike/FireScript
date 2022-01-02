@@ -1,43 +1,114 @@
-import os
-
-from parser.lexer.tokens import *
+from typing import Any, List, Tuple
 from parser.lexer.lexer import Lexer
-from parser.lexer.readers import FileReader
-
-dummy_file = "code.txt"
-
-
-def delete_file(file):
-    os.remove(file)
+from parser.lexer.readers import StringReader
 
 
 def test_lexer_string():
-    with open(dummy_file, "w") as f:
-        f.write('"Hello, \' World!"')
+    code = '"Hello, \' World!"'
+    
+    tokens = [
+        ("Hello, ' World!", "String"),
+        ("", "EOF")
+    ]
 
-    lexer = Lexer(FileReader(dummy_file))
-
-    str_token = lexer.next_token()
-    assert str_token.type == "String", f"Got unexpected token - {str_token.type}!"
-    assert (
-        str_token.value == "Hello, ' World!"
-    ), f"Got unexpected string - {str_token.value}"
-
-    assert lexer.next_token().type == "EOF", f"Got unexpected token instead of EOF!"
+    compare_tokens(code, tokens)
 
 
 def test_lexer_numeric():
-    with open(dummy_file, "w") as f:
-        f.write("123\n123.45\n")
+    code = "123\n-123.45\n"
+    
+    tokens = [
+        (123, "Integer"),
+        (-123.45, "Float"),
+        ("", "EOF")
+    ]
 
-    lexer = Lexer(FileReader(dummy_file))
+    compare_tokens(code, tokens)
 
-    int_token = lexer.next_token()
-    assert int_token.type == "Integer", f"Got unexpected token - {int_token.type}!"
-    assert int_token.value == 123, f"Got unexpected integer - {int_token.value}"
 
-    float_token = lexer.next_token()
-    assert float_token.type == "Float", f"Got unexpected token - {float_token.type}!"
-    assert float_token.value == 123.45, f"Got unexpected float - {float_token.value}"
+def test_lexer_arithmetic_expression():
+    code = "54 - (8.88 / 5) * 56 + 'Hello'[1]"
 
-    assert lexer.next_token().type == "EOF", f"Got unexpected token instead of EOF!"
+    tokens = [
+        (54, "Integer"),
+        ("-", "Operator"),
+        ("(", "Bracket"),
+        (8.88, "Float"),
+        ("/", "Operator"),
+        (5, "Integer"),
+        (")", "Bracket"),
+        ("*", "Operator"),
+        (56, "Integer"),
+        ("+", "Operator"),
+        ("Hello", "String"),
+        ("[", "SquareBracket"),
+        (1, "Integer"),
+        ("]", "SquareBracket"),
+        ("", "EOF")
+    ]
+
+    compare_tokens(code, tokens)
+
+
+def test_lexer_program():
+    code = """(begin
+    (print "Hello, World!" '\\n')
+    (put (< 8 5))
+)"""
+
+    tokens = [
+        ("(", "Bracket"),
+        ("begin", "Identifier"),
+        ("(", "Bracket"),
+        ("print", "Identifier"),
+        ("Hello, World!", "String"),
+        ("\\n", "String"),
+        (")", "Bracket"),
+        ("(", "Bracket"),
+        ("put", "Identifier"),
+        ("(", "Bracket"),
+        ("<", "AngleBracket"),
+        (8, "Integer"),
+        (5, "Integer"),
+        (")", "Bracket"),
+        (")", "Bracket"),
+        (")", "Bracket")
+    ]
+
+    compare_tokens(code, tokens)
+
+
+def test_unterminated_string():
+    code = "(print 'Hello!\n')"
+
+    tokens = [
+        ("(", "Bracket"),
+        ("print", "Identifier"),
+    ]
+
+    check_error(code, tokens)
+
+
+def test_unknown_character():
+    code = "(begin &)"
+    tokens = [
+        ("(", "Bracket"),
+        ("begin", "Identifier")
+    ]
+
+    check_error(code, tokens)
+
+
+def check_error(code, tokens: List[Tuple[Any, str]]):
+    _ex = exit
+    globals()["exit"] = lambda _: None
+    compare_tokens(code, tokens)
+    globals()["exit"] = _ex
+
+def compare_tokens(code: str, tokens: List[Tuple[Any, str]]):
+    lexer = Lexer(StringReader(code))
+    for tok in tokens:
+        next_tok = lexer.next_token()
+
+        assert next_tok.type == tok[1], f"Got unexpected token - {next_tok.type} (Expected {tok[1]})"
+        assert next_tok.value == tok[0], f"Got unexpected {tok[1]} - {next_tok.value} (Expected {tok[0]})"

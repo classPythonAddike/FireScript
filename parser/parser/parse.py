@@ -6,6 +6,7 @@ from parser.parser.expression_models import atom_types, expression_types
 
 from parser.errors.errors import (
     FArgsError,
+    FEOFError,
     FProgramError,
     FSyntaxError,
     FKeywordError,
@@ -20,7 +21,7 @@ class Parser:
         self.lexer = lexer
         initialise_reader(self.lexer.reader)
 
-    def parse_program(self) -> List:
+    def parse_program(self) -> Program:
         tokens: List[Token] = []
 
         while True:
@@ -28,8 +29,8 @@ class Parser:
 
             if next_token.type == "EOF":
                 break
-            if next_token.type != "NewLine":
-                tokens.append(next_token)
+            
+            tokens.append(next_token)
 
         program = self.parse(self.parse_raw(tokens))
 
@@ -40,11 +41,11 @@ class Parser:
 
         self.check_typing(program)
 
-        return program.eval({})
+        return program
 
     def parse_raw(self, tokens: List[Token]):
         if len(tokens) <= 1:
-            FSyntaxError(
+            FEOFError(
                 len(self.lexer.reader.code.split("\n")), "Unexpected EOF!"
             ).raise_error()
 

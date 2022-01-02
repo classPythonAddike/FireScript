@@ -6,7 +6,6 @@ class Colors:
     RED = "\033[91m"
     CLEAR = "\033[0m"
 
-
 _r: Reader
 
 
@@ -104,3 +103,8 @@ class FEOFError(FException):
     @property
     def prefix(self) -> str:
         return "Error encountered - Unexpected EOF!"
+
+class FEOLError(FException):
+    @property
+    def prefix(self) -> str:
+        return "Error encountered - Unexpected newline!"

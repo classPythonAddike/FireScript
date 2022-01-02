@@ -1,5 +1,5 @@
 from typing import Tuple
-from parser.errors.errors import FParsingError, FEOFError
+from parser.errors.errors import FEOLError, FParsingError, FEOFError
 
 from parser.lexer.tokens import *
 from parser.lexer.readers import Reader
@@ -53,10 +53,14 @@ class Lexer:
             # TODO: Raise error on finding newline/EOF
             if current == quote:
                 return string
-            elif current == "\n" or current == "EOF":
+            elif current == "EOF":
                 FEOFError(
                     self.reader.current_line_number(), "EOF while scanning string!"
                 ).raise_error()
+            elif current == "\n":
+                FEOLError(
+                    self.reader.current_line_number(), "EOL while scanning string!"
+                ).raise_error
             else:
                 string += current
 
@@ -70,8 +74,28 @@ class Lexer:
             if current == "EOF":
                 return EOF("", self.reader.current_line_number())
 
-            if current.isspace() or current == "\n":
+            elif current.isspace() or current == "\n":
                 continue
+
+            elif current.isalpha():
+                ident = self.lex_identifier()
+                if ident in ["true", "false"]:
+                    return Bool(ident, self.reader.current_line_number())
+                return Identifier(ident, self.reader.current_line_number())
+
+            elif current.isdigit() or current == "-":
+                self.reader.advance_pointer()
+
+                if self.reader.current_character().isdigit() or current != "-":
+                    self.reader.retreat_pointer()
+                    numeric_type, value = self.lex_numeric()
+                    return [Float, Integer][numeric_type == "int"](
+                        value, self.reader.current_line_number()
+                    )
+
+            if current in "\"'":
+                return String(self.lex_string(), self.reader.current_line_number())
+
 
             elif current in "+-*/":
                 return Operator(current, self.reader.current_line_number())
@@ -84,21 +108,6 @@ class Lexer:
                 return SquareBracket(current, self.reader.current_line_number())
             elif current in "<>":
                 return AngleBracket(current, self.reader.current_line_number())
-
-            elif current.isalpha():
-                ident = self.lex_identifier()
-                if ident in ["true", "false"]:
-                    return Bool(ident, self.reader.current_line_number())
-                return Identifier(ident, self.reader.current_line_number())
-
-            elif current.isdigit():
-                numeric_type, value = self.lex_numeric()
-                return [Float, Integer][numeric_type == "int"](
-                    value, self.reader.current_line_number()
-                )
-
-            elif current in "\"'":
-                return String(self.lex_string(), self.reader.current_line_number())
 
             else:
                 line = self.reader.current_line_number()
