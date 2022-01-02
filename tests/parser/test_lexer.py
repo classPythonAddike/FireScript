@@ -36,15 +36,8 @@ def test_lexer_numeric():
     assert int_token.type == "Integer", f"Got unexpected token - {int_token.type}!"
     assert int_token.value == 123, f"Got unexpected integer - {int_token.value}"
 
-    assert (
-        lexer.next_token().type == "NewLine"
-    ), f"Got unexpected token instead of newline!"
-
     float_token = lexer.next_token()
     assert float_token.type == "Float", f"Got unexpected token - {float_token.type}!"
     assert float_token.value == 123.45, f"Got unexpected float - {float_token.value}"
 
-    assert (
-        lexer.next_token().type == "NewLine"
-    ), f"Got unexpected token instead of newline!"
     assert lexer.next_token().type == "EOF", f"Got unexpected token instead of EOF!"

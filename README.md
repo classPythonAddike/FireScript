@@ -26,11 +26,8 @@ $ venv\Scripts\activate.bat # Windows
 (venv) $ make build
 ```
 
-You can use the shell script in `bin/` to compile your code. Again, you _must_ be in the same directory as this README, so that all paths work as expected. To get around this, you can directly execute the parser with `bin/fs-build main.fs`.
-
-To compile your `.fs` programs into bytecode -
+To compile your `.fs` programs into "pseudo" bytecode -
 ```sh
-$ chmod +x bin/firescript # Make the shell script executable
 $ bin/firescript build examples/helloworld.fs
 ```
 
@@ -40,7 +37,7 @@ And you should see the resulting `.fsc` file in the same directory.
 
 We have very ambitious plans for FireScript - We want to make it possible to interpret, compile, and transpile FireScript programs easily.
 
-As of now, the first step has been partially implemented - A parser to convert FireScript code into bytecode, and the interpreter is under works.
+As of now, the first step has been partially implemented - A parser to convert FireScript code into "pseudo" bytecode, and the interpreter is under works.
 
 Here are some perks of interpreting/compiling/transpiling FireScript -
 1. Interpreting - Even thought interpreting a program is not very fast, as compared to running a compiled executable, interpreters are still pretty popular - you can edit the source code while the program is running, and see the changes ocurr live. While this feature will not be available in FireScript, we will offer something else - live reload. Live Reload is a great feature to use during dev time, as you don't need to keep rerunning the script. Even if you won't use that feature, just plain interpreting your program should speed up your development, as compared to compiling and running everytime you make your changes.
