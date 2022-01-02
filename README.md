@@ -6,7 +6,27 @@ Welcome! FireScript is a statically typed, Lisp language which is very similar t
 
 ## Running FireScript Programs
 
-You can use the shell script in `bin/` to run your code. As of now, you _must_ be in the same directory as this README, so that all imports work as expected. We hope to change this as soon as we have an interpreter rolled out!
+Currently, since dev on FireScript is still ongoing, you will need to install all the required modules, and compile the parser manually. This will change as soon as we have a stable interpreter, and parser rolled out.
+
+Make sure you're using Python 3.10 -
+
+```sh
+# Create a venv
+$ python -m venv ./venv
+
+# Activate the venv
+$ source venv/bin/activate # Linux/MacOS
+$ venv\Scripts\activate.bat # Windows
+
+# Install python packages
+(venv) $ pip install -r requirements.txt
+
+# Compile the parser with nuitka
+# If you want faster compile times, make sure you have `ccache` installed as nuitka uses it to cache builds
+(venv) $ make build
+```
+
+You can use the shell script in `bin/` to compile your code. Again, you _must_ be in the same directory as this README, so that all paths work as expected. To get around this, you can directly execute the parser with `bin/fs-build main.fs`.
 
 To compile your `.fs` programs into bytecode -
 ```sh

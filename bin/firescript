@@ -5,7 +5,7 @@ FILE=$2
 
 case $COMMAND in
     build)
-        python -m bin.parse $FILE
+        bin/fs-build $FILE
     ;;
     *)
         echo "Invalid command!"
