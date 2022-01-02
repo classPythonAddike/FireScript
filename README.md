@@ -2,7 +2,7 @@
 
 Welcome! FireScript is a statically typed, Lisp language which is very similar to Scheme. Please note, that it is still under active development.
 
-###### Please note: We will not be accepting PR's until we have a working interpreter and a mostly complete parser
+###### Please note: We will not be accepting PR's to the interpreter until we have a working interpreter. However, you can make PR's to the parser, after discussing your changes in a Github issue.
 
 ## Running FireScript Programs
 
