@@ -1,5 +1,5 @@
 class Auto():
-    counter = -1
+    counter = 0
 
     @classmethod
     def auto(cls) -> str:
@@ -29,4 +29,4 @@ class OpCodes():
     PUT = Auto.auto()
     GET = Auto.auto()
 
-    SEP = Auto.auto()
+    SEP = "|"

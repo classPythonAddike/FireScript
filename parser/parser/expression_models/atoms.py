@@ -48,7 +48,8 @@ class FloatExp(Expression):
         return variables
 
     def eval(self, _: Dict[str, int]) -> List[List[str]]:
-        return [[OpCodes.PUSH, OpCodes.FLOAT, str(self.value)]]
+        integer, decimal = str(self.value).split(".")
+        return [[OpCodes.PUSH, OpCodes.FLOAT, integer, decimal]]
 
     @property
     def value_type(self) -> str:
