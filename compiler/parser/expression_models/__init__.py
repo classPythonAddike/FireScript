@@ -1,4 +1,4 @@
-from parser.parser.expression_models.atoms import (
+from compiler.parser.expression_models.atoms import (
     IntExp,
     FloatExp,
     BoolExp,
@@ -6,11 +6,11 @@ from parser.parser.expression_models.atoms import (
     VarExp,
 )
 
-from parser.parser.expressions import Program
-from parser.parser.expression_models.builtins import PrintExp, PutExp, GetExp
-from parser.parser.expression_models.definitions import DefExp, AssignExp
-from parser.parser.expression_models.arithmetic import AddExp, SubExp, MulExp, DivExp
-from parser.parser.expression_models.typecasting import (
+from compiler.parser.expressions import Program
+from compiler.parser.expression_models.builtins import PrintExp, PutExp, GetExp
+from compiler.parser.expression_models.definitions import DefExp, AssignExp
+from compiler.parser.expression_models.arithmetic import AddExp, SubExp, MulExp, DivExp
+from compiler.parser.expression_models.typecasting import (
     IntTypeCast,
     FloatTypeCast,
     StrTypeCast,

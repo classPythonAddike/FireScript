@@ -1,9 +1,9 @@
 from typing import Dict, List
-from parser.errors.errors import FTypeError
+from compiler.errors.errors import FTypeError
 
-from parser.bytecode.opcodes import OpCodes
-from parser.parser.expressions import Expression
-from parser.lexer.tokens import Token
+from compiler.bytecode.opcodes import OpCodes
+from compiler.parser.expressions import Expression
+from compiler.lexer.tokens import Token
 
 # -------------------- Atoms --------------------
 

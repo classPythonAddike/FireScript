@@ -1,7 +1,7 @@
-from parser.lexer.lexer import Lexer
-from parser.parser.expressions import Expression, Program
-from parser.parser.parse import Parser
-from parser.lexer.readers import StringReader
+from compiler.lexer.lexer import Lexer
+from compiler.parser.expressions import Expression, Program
+from compiler.parser.parse import Parser
+from compiler.lexer.readers import StringReader
 
 
 def test_arithmetic():

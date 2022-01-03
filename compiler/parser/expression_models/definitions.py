@@ -1,6 +1,6 @@
-from parser.bytecode.opcodes import OpCodes
-from parser.parser.expressions import Expression
-from parser.errors.errors import FNotDefinedError, FRedefineError, FTypeError
+from compiler.bytecode.opcodes import OpCodes
+from compiler.parser.expressions import Expression
+from compiler.errors.errors import FNotDefinedError, FRedefineError, FTypeError
 
 from typing import Dict, List
 

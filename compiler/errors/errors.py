@@ -1,4 +1,4 @@
-from parser.lexer.readers import Reader
+from compiler.lexer.readers import Reader
 
 
 class Colors:

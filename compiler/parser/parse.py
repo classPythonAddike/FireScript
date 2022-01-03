@@ -1,10 +1,10 @@
-from parser.lexer.lexer import Lexer
-from parser.lexer.tokens import Token
+from compiler.lexer.lexer import Lexer
+from compiler.lexer.tokens import Token
 
-from parser.parser.expressions import Expression, Program
-from parser.parser.expression_models import atom_types, expression_types
+from compiler.parser.expressions import Expression, Program
+from compiler.parser.expression_models import atom_types, expression_types
 
-from parser.errors.errors import (
+from compiler.errors.errors import (
     FArgsError,
     FEOFError,
     FProgramError,

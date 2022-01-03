@@ -29,4 +29,4 @@ class OpCodes():
     PUT = Auto.auto()
     GET = Auto.auto()
 
-    SEP = "|"
+    SEP = "\n"

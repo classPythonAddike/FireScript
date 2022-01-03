@@ -1,6 +1,6 @@
 from typing import Any, List, Tuple
-from parser.lexer.lexer import Lexer
-from parser.lexer.readers import StringReader
+from compiler.lexer.lexer import Lexer
+from compiler.lexer.readers import StringReader
 
 
 def test_lexer_string():

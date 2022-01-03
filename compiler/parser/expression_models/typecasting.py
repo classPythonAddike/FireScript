@@ -1,6 +1,6 @@
-from parser.bytecode.opcodes import OpCodes
-from parser.errors.errors import FArgsError
-from parser.parser.expressions import Expression
+from compiler.bytecode.opcodes import OpCodes
+from compiler.errors.errors import FArgsError
+from compiler.parser.expressions import Expression
 
 from typing import Dict, List
 

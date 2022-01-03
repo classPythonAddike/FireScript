@@ -1,9 +1,9 @@
 import click
 
-from parser.bytecode.bytecode import to_byte_code
-from parser.lexer.lexer import Lexer
-from parser.parser.parse import Parser
-from parser.lexer.readers import FileReader
+from compiler.bytecode.bytecode import to_byte_code
+from compiler.lexer.lexer import Lexer
+from compiler.parser.parse import Parser
+from compiler.lexer.readers import FileReader
 
 @click.group()
 def cli():

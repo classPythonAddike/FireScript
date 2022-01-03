@@ -1,9 +1,9 @@
 from typing import Dict, List
 
-from parser.bytecode.opcodes import OpCodes
-from parser.parser.expressions import Expression
-from parser.parser.expression_models.atoms import VarExp
-from parser.errors.errors import FNotDefinedError, FSyntaxError, FTypeError
+from compiler.bytecode.opcodes import OpCodes
+from compiler.parser.expressions import Expression
+from compiler.parser.expression_models.atoms import VarExp
+from compiler.errors.errors import FNotDefinedError, FSyntaxError, FTypeError
 
 
 # -------------------- Simple Expressions --------------------

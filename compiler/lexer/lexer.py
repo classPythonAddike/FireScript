@@ -1,8 +1,8 @@
 from typing import Tuple
-from parser.errors.errors import FEOLError, FParsingError, FEOFError
+from compiler.errors.errors import FEOLError, FParsingError, FEOFError
 
-from parser.lexer.tokens import *
-from parser.lexer.readers import Reader
+from compiler.lexer.tokens import *
+from compiler.lexer.readers import Reader
 
 
 class Lexer:
