@@ -11,15 +11,15 @@ class Expression:
         self.line = line
 
     def eval(self, variables: Dict[str, int]) -> List[List[str]]:
-        """Outputs bytecode"""
+        """Outputs pseudo bytecode"""
         return sum([exp.eval(variables) for exp in self.values], [])
 
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
         """
-        Calculates the type of the expression's return value, and forces all child expressions to do the same
-        `variables` is used to keep track of the type of variables
-        In case a type does not match the required value (like (+ "A" 5)), a TypeError is raised
-        Enforces static typing
+        -> Calculates the type of the expression's return value, and forces all child expressions to do the same
+        `variables` is used to keep track of the type of all user defined variables.
+        -> In case a type does not match the required value (like (+ "A" 5)), a TypeError is raised
+        -> Enforces static typing
         """
         for val in self.values:
             variables = val.load_type(variables)
@@ -34,19 +34,25 @@ class Expression:
 
     @classmethod
     def keyword(cls) -> str:
-        """Keyword that defines the expression type (if, lambda, print, etc)"""
+        """
+        Keyword that defines the expression type (if, lambda, print, +, - etc)
+        Only applicable for expressions -> addition, prints, code blocks, etc
+        """
         return ""
 
     @classmethod
     def atom_type(cls) -> str:
-        """Keyword that defines the token type (int, float, bool, etc)"""
+        """
+        Keyword that defines the token type (int, float, bool, etc)
+        Only applicable for atoms -> int, float, bool, string, etc
+        """
         return ""
 
     @classmethod
     def num_args(cls) -> int:
         """
         Number of arguments expected to construct this expression
-        0 means any number of  arguments can be passed
+        0 implies that any number of arguments can be passed
         """
         return 0
 
@@ -59,7 +65,12 @@ class Expression:
 
 
 class Program(Expression):
-    """(begin ...)"""
+    """
+    Syntax: (begin expression1 expression2 ...)
+    Argument Types: Any
+    Return Type: None
+    Used as code blocks.
+    """
 
     @property
     def value_type(self) -> str:

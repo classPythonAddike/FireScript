@@ -10,9 +10,15 @@ from compiler.errors.errors import FNotDefinedError, FSyntaxError, FTypeError
 
 
 class PrintExp(Expression):
-    """Print an expression without a newline"""
+    """
+    Syntax: (print arg1 arg2 arg3 ...)
+    Argument Types: Any
+    Return Type: None
+    Print an expression without a newline
+    """
 
     def eval(self, variables: Dict[str, int]) -> List[List[str]]:
+        """Load each argument onto the stack, and print it manually"""
         return sum(
             [
                 [*exp.eval(variables)] + [[OpCodes.PRINT], [OpCodes.POP]]
@@ -31,20 +37,27 @@ class PrintExp(Expression):
 
 
 class PutExp(Expression):
-    """Print an expression, with a newline"""
+    """
+    Syntax: (put arg1 arg2 arg3 ...)
+    Argument Types: Any
+    Return Type: None
+    Print an expression with a newline
+    """
 
     def eval(self, variables: Dict[str, int]) -> List[List[str]]:
+        """Load each arg, and then print it. Then, print a newline"""
         return sum(
             [
                 [*exp.eval(variables)]
                 + [
-                    [OpCodes.PUT if pos == len(self.values) - 1 else OpCodes.PRINT],
+                    [OpCodes.PRINT],
                     [OpCodes.POP],
                 ]
-                for pos, exp in enumerate(self.values)
+                for exp in self.values
             ],
             [],
-        )
+        ) + [[OpCodes.PUSH, OpCodes.STRING, str(ord("\n"))], [OpCodes.PRINT], [OpCodes.POP]]
+
 
     @property
     def value_type(self) -> str:
@@ -56,19 +69,26 @@ class PutExp(Expression):
 
 
 class GetExp(Expression):
-    """Get input from user into a specified variable"""
+    """
+    Syntax: (get variable)
+    Argument Types: Variable of type String
+    Return Type: None
+    Store user input into `variable`
+    """ 
 
     def __init__(self, line: int, *args):
         self.line = line
         self.variable = args[0]
 
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
+        # Ensure that the the argument is a variable
         if not isinstance(self.variable, VarExp):
             FSyntaxError(
                 self.line, "Argument to `get` must be a variable of type String!"
             ).raise_error()
 
         if self.variable.value not in variables:
+            # Ensure that the variable is defined
             FNotDefinedError(
                 self.line, f"Variable `{self.variable.value}` is not defined!"
             ).raise_error()
@@ -76,6 +96,7 @@ class GetExp(Expression):
         variables = self.variable.load_type(variables)
 
         if self.variable.value_type != "String":
+            # Ensure that the variable is of type string
             FTypeError(
                 self.line,
                 f"`get` returns a String, but `{self.variable.value}` is of type {self.variable.value_type}!",

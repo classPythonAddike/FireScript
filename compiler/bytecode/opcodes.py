@@ -26,7 +26,6 @@ class OpCodes():
     DIV = Auto.auto()
 
     PRINT = Auto.auto()
-    PUT = Auto.auto()
     GET = Auto.auto()
 
     SEP = "\n"

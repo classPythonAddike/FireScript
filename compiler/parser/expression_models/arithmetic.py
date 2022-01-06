@@ -9,6 +9,13 @@ from typing import Dict, List
 
 
 class AddExp(Expression):
+    """
+    Syntax: (+ val1 val2 val3 ...)
+    Argument Types: Any
+    Return Type: Any
+    Add `n` values to each other
+    """
+
     def __init__(self, line: int, *args: Expression):
 
         if len(args) == 0:
@@ -28,11 +35,16 @@ class AddExp(Expression):
         ] * (len(self.values) - 1)
 
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
+        """
+        First, make sure every object is of the same type.
+        Then set the addition expression's type to that of the objects.
+        """
         for val in self.values:
             variables = val.load_type(variables)
 
         val_types = [val.value_type for val in self.values]
 
+        # Types are not the same
         if len(set(val_types)) != 1:
             FTypeError(
                 self.line, f"Mismatching types! Got {', '.join(val_types)}!"
@@ -47,6 +59,13 @@ class AddExp(Expression):
 
 
 class SubExp(Expression):
+    """
+    Syntax: (- val1 val2)
+    Argument Types: Any
+    Return Type: Any
+    Subtract two values from each other
+    """
+
     def __init__(self, line: int, *args: Expression):
         self.lval = args[0]
         self.rval = args[1]
@@ -54,6 +73,7 @@ class SubExp(Expression):
         self.line = line
 
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
+        """Make sure both values are of same type, then set expression's type"""
 
         variables = self.lval.load_type(variables)
         variables = self.rval.load_type(variables)
@@ -84,6 +104,13 @@ class SubExp(Expression):
 
 
 class MulExp(AddExp):
+    """
+    Syntax: (* val1 val2 val3 ...)
+    Argument Types: Any
+    Return Type: Any
+    Multiply `n` values with each other
+    """
+
     def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return sum([val.eval(variables) for val in self.values], []) + [
             [OpCodes.MUL],
@@ -97,6 +124,12 @@ class MulExp(AddExp):
 
 
 class DivExp(SubExp):
+    """
+    Syntax: (/ val1 val2)
+    Argument Types: Any
+    Return Type: Any
+    Divide 1 value by another
+    """
     def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return (
             [*self.rval.eval(variables)]

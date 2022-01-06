@@ -8,11 +8,13 @@ from typing import Dict, List
 
 
 class IntTypeCast(Expression):
+    """
+    Syntax: (int value)
+    Argument Types: Any
+    Return Type: Int
+    Type casts a provided value into an integer.
+    """
     def __init__(self, line: int, *args: "Expression"):
-
-        if len(args) != 1:
-            FArgsError(line, f"Expected 1 arguments, got {len(args)}!").raise_error()
-
         self.value = args[0]
         self.line = line
 
@@ -39,6 +41,12 @@ class IntTypeCast(Expression):
 
 
 class FloatTypeCast(IntTypeCast):
+    """
+    Syntax: (float value)
+    Argument Types: Any
+    Return Type: Float
+    Type casts a provided value into an float.
+    """
     def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return [*self.value.eval(variables)] + [
             [OpCodes.CAST, OpCodes.FLOAT],
@@ -55,6 +63,12 @@ class FloatTypeCast(IntTypeCast):
 
 
 class StrTypeCast(IntTypeCast):
+    """
+    Syntax: (string value)
+    Argument Types: Any
+    Return Type: String
+    Type casts a provided value into an string.
+    """
     def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return [*self.value.eval(variables)] + [
             [OpCodes.CAST, OpCodes.STRING],

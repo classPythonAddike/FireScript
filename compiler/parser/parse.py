@@ -22,11 +22,11 @@ class Parser:
         initialise_reader(self.lexer.reader)
 
     def parse_program(self) -> Program:
+        """Reads all tokens from the lexer, and parses them into a Program"""
         tokens: List[Token] = []
 
         while True:
             next_token = self.lexer.next_token()
-
             if next_token.type == "EOF":
                 break
             
@@ -44,6 +44,11 @@ class Parser:
         return program
 
     def parse_raw(self, tokens: List[Token]):
+        """
+        Converts a list of tokens into a nested list of tokens
+        Eg: (begin (+ 1 2)) would become [begin, [+, 1, 2]]
+        """
+
         if len(tokens) <= 1:
             FEOFError(
                 len(self.lexer.reader.code.split("\n")), "Unexpected EOF!"
@@ -62,6 +67,7 @@ class Parser:
             return token
 
     def parse(self, tokens: Union[List, Token]) -> Union[Program, Expression]:
+        """Parses a nested list of tokens into an AST"""
         if isinstance(tokens, list):
             if tokens[0].value in expression_types:
 
@@ -93,4 +99,8 @@ class Parser:
             ).raise_error()
 
     def check_typing(self, program: Program):
+        """
+        Assert that static typing is followed.
+        The method `load_type()` is called on every node of the AST
+        """
         program.load_type({})
