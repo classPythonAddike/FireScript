@@ -95,7 +95,11 @@ class Lexer:
 
             if current in "\"'":
                 return String(self.lex_string(), self.reader.current_line_number())
-
+            
+            elif current == ";":
+                # Comment
+                while self.reader.current_character() != "\n":
+                    self.reader.advance_pointer()
 
             elif current in "+-*/":
                 return Operator(current, self.reader.current_line_number())

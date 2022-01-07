@@ -1,4 +1,6 @@
 from typing import Any, List, Tuple
+
+from compiler.errors.errors import initialise_reader
 from compiler.lexer.lexer import Lexer
 from compiler.lexer.readers import StringReader
 
@@ -52,6 +54,7 @@ def test_lexer_arithmetic_expression():
 
 def test_lexer_program():
     code = """(begin
+    ; Print a line
     (print "Hello, World!" '\\n')
     (put (< 8 5))
 )"""
@@ -107,6 +110,8 @@ def check_error(code, tokens: List[Tuple[Any, str]]):
 
 def compare_tokens(code: str, tokens: List[Tuple[Any, str]]):
     lexer = Lexer(StringReader(code))
+    initialise_reader(lexer.reader)
+
     for tok in tokens:
         next_tok = lexer.next_token()
 

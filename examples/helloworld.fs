@@ -1,3 +1,4 @@
+; A simple Hello World program!
 (begin
     (put "Hello, World!")
     (print "As you can see, `put` prints to stdout and then prints a newline\n")
