@@ -3,8 +3,8 @@ import click
 from compiler.lexer.lexer import Lexer
 from compiler.parser.parse import Parser
 from compiler.lexer.readers import FileReader
+from compiler.bytecode.opcodes import operations
 from compiler.bytecode.bytecode import to_byte_code
-from compiler.bytecode.opcodes import ls_operations
 
 VERSION = "0.0.1-alpha"
 
@@ -40,9 +40,30 @@ def bytecode():
 def lsop():
     """List all valid bytecode instructions, along with their code (meant for developers)"""
     click.echo("Format of ByteCode: NUM_CODES INSTRUCTION [ARGS]+")
+    click.echo()
 
-    for instruction, id in ls_operations().items():
-        click.echo(f"{instruction}  {id}")
+    max_len = max([len(instruction) for instruction in operations])
+    max_id_len = max([len(val[0]) for val in operations.values()])
+    max_docs_len = max([len(val[1]) for val in operations.values()])
+
+    click.echo("INSTRUCTION TYPE" + (max_len - 11) * " " + "ID" + " " * (max_id_len + 3) + "DESCRIPTION")
+    click.echo((max_len + max_id_len + max_docs_len + 11) * "-")
+
+    for num, instruction in enumerate(operations):
+        sep = " -"[num % 2]
+        click.echo(
+            instruction \
+            + " " \
+            + sep * (max_len + 3 - len(instruction)) \
+            + " " \
+            + operations[instruction][0] \
+            + " " \
+            + sep * (max_id_len - len(operations[instruction][0]) + 3) \
+            + " " \
+            + operations[instruction][1]
+        )
+
+    click.echo()
 
 
 if __name__ == "__main__":
