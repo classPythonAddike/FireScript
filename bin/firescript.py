@@ -66,5 +66,43 @@ def lsop():
     click.echo()
 
 
+@bytecode.command(short_help="Decompile bytecode into human readable format")
+@click.argument('file', type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True))
+def decompile(file: str):
+    with open(file, "r") as f:
+        bytecode = [line.split() for line in f.read().strip().split("\n")]
+
+    code_instruction_map = {code[0]: inst for inst, code in operations.items()}
+
+    for line in bytecode:
+        inst = code_instruction_map[line[1]]
+        click.echo(inst + " ", nl=False)
+
+        if len(line) >= 3:
+            if inst == "PUSH":
+                _type = code_instruction_map[line[2]]
+                args = line[3:]
+                
+                click.echo(_type + " ", nl=False)
+
+                match _type:
+                    case "BOOL":
+                        click.echo(["FALSE", "TRUE"][int(args[0])] + " ", nl=False)
+                    case "INT":
+                        if args[0] == "0":
+                            click.echo("-", nl=False)
+                        click.echo(args[1], nl=False)
+                    case "FLOAT":
+                        if args[0] == "0":
+                            click.echo("-", nl=False)
+                        click.echo(args[1] + "." + args[2], nl=False)
+                    case "STRING":
+                        click.echo(" ".join(args), nl=False)
+            else:
+                click.echo(" ".join(line[2:]), nl=False)
+
+        click.echo()
+
+
 if __name__ == "__main__":
     cli()

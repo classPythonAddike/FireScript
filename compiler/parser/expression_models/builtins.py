@@ -21,7 +21,7 @@ class PrintExp(Expression):
         """Load each argument onto the stack, and print it manually"""
         return sum(
             [
-                [*exp.eval(variables)] + [[OpCodes.PRINT], [OpCodes.POP]]
+                [*exp.eval(variables)] + [[OpCodes.PRINT]]
                 for exp in self.values
             ],
             [],
@@ -48,15 +48,11 @@ class PutExp(Expression):
         """Load each arg, and then print it. Then, print a newline"""
         return sum(
             [
-                [*exp.eval(variables)]
-                + [
-                    [OpCodes.PRINT],
-                    [OpCodes.POP],
-                ]
+                [*exp.eval(variables)] + [[OpCodes.PRINT]]
                 for exp in self.values
             ],
             [],
-        ) + [[OpCodes.PUSH, OpCodes.STRING, str(ord("\n"))], [OpCodes.PRINT], [OpCodes.POP]]
+        ) + [[OpCodes.PUSH, OpCodes.STRING, str(ord("\n"))], [OpCodes.PRINT]]
 
 
     @property
@@ -109,7 +105,6 @@ class GetExp(Expression):
         return [
             [OpCodes.GET],
             [OpCodes.STORE, str(variables[self.variable.value])],
-            [OpCodes.POP],
         ]
 
     @classmethod

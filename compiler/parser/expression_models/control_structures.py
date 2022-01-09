@@ -27,9 +27,9 @@ class IfExp(Expression):
 
         return \
             condition_eval \
-            + [[OpCodes.JUMP_IF_TRUE_AND_POP, str(len(alternate_eval) + 3)]] \
+            + [[OpCodes.JUMP_IF_TRUE, "1", str(len(alternate_eval) + 2)]] \
             + alternate_eval \
-            + [[OpCodes.PUSH, OpCodes.BOOL, "1"], [OpCodes.JUMP_IF_TRUE_AND_POP, str(len(body_eval) + 1)]] \
+            + [[OpCodes.PUSH, OpCodes.BOOL, "1"], [OpCodes.JUMP_IF_TRUE, "1", str(len(body_eval))]] \
             + body_eval
 
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:

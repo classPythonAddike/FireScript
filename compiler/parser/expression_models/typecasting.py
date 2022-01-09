@@ -27,7 +27,6 @@ class IntTypeCast(Expression):
     def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return [*self.value.eval(variables)] + [
             [OpCodes.CAST, OpCodes.INT],
-            [OpCodes.POP],
         ]
 
     @classmethod
@@ -49,7 +48,6 @@ class FloatTypeCast(IntTypeCast):
     def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return [*self.value.eval(variables)] + [
             [OpCodes.CAST, OpCodes.FLOAT],
-            [OpCodes.POP],
         ]
 
     @classmethod
@@ -71,7 +69,6 @@ class StrTypeCast(IntTypeCast):
     def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return [*self.value.eval(variables)] + [
             [OpCodes.CAST, OpCodes.STRING],
-            [OpCodes.POP],
         ]
 
     @classmethod

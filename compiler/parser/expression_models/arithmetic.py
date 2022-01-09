@@ -30,8 +30,6 @@ class AddExp(Expression):
     def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return sum([val.eval(variables) for val in self.values], []) + [
             [OpCodes.ADD],
-            [OpCodes.POP],
-            [OpCodes.POP],
         ] * (len(self.values) - 1)
 
     def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
@@ -91,7 +89,7 @@ class SubExp(Expression):
         return (
             [*self.rval.eval(variables)]
             + [*self.lval.eval(variables)]
-            + [[OpCodes.SUB], [OpCodes.POP], [OpCodes.POP]]
+            + [[OpCodes.SUB]]
         )
 
     @classmethod
@@ -114,8 +112,6 @@ class MulExp(AddExp):
     def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return sum([val.eval(variables) for val in self.values], []) + [
             [OpCodes.MUL],
-            [OpCodes.POP],
-            [OpCodes.POP],
         ] * (len(self.values) - 1)
 
     @classmethod
@@ -134,7 +130,7 @@ class DivExp(SubExp):
         return (
             [*self.rval.eval(variables)]
             + [*self.lval.eval(variables)]
-            + [[OpCodes.DIV], [OpCodes.POP], [OpCodes.POP]]
+            + [[OpCodes.DIV]]
         )
 
     @classmethod

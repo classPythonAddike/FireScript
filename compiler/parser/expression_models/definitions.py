@@ -36,7 +36,6 @@ class DefExp(Expression):
         variables[self.variable.value] = len(variables)
         return [*self.value.eval(variables)] + [
             [OpCodes.STORE, str(len(variables) - 1)],
-            [OpCodes.POP],
         ]
 
     @classmethod
@@ -88,7 +87,6 @@ class AssignExp(Expression):
         # Load Value, Store <variable id>, Pop Value
         return [*self.value.eval(variables)] + [
             [OpCodes.STORE, str(variables[self.variable.value])],
-            [OpCodes.POP],
         ]
 
     @classmethod
