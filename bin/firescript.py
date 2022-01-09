@@ -1,9 +1,12 @@
 import click
 
-from compiler.bytecode.bytecode import to_byte_code
 from compiler.lexer.lexer import Lexer
 from compiler.parser.parse import Parser
 from compiler.lexer.readers import FileReader
+from compiler.bytecode.bytecode import to_byte_code
+from compiler.bytecode.opcodes import ls_operations
+
+VERSION = "0.0.1-alpha"
 
 @click.group()
 def cli():
@@ -20,6 +23,27 @@ def build(file: str):
 
     with open(out_file, "w") as f:
         f.write(bytecode)
+
+
+@cli.command(short_help="Display version info")
+def version():
+    """Display version information"""
+    click.echo(f"Firescript v{VERSION}")
+
+
+@cli.group()
+def bytecode():
+    pass
+
+
+@bytecode.command(short_help="List valid bytecode instructions (for developers)")
+def lsop():
+    """List all valid bytecode instructions, along with their code (meant for developers)"""
+    click.echo("Format of ByteCode: NUM_CODES INSTRUCTION [ARGS]+")
+
+    for instruction, id in ls_operations().items():
+        click.echo(f"{instruction}  {id}")
+
 
 if __name__ == "__main__":
     cli()

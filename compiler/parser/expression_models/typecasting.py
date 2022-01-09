@@ -1,5 +1,4 @@
 from compiler.bytecode.opcodes import OpCodes
-from compiler.errors.errors import FArgsError
 from compiler.parser.expressions import Expression
 
 from typing import Dict, List

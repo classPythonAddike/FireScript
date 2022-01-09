@@ -9,7 +9,7 @@ from compiler.lexer.tokens import Token
 
 
 class IntExp(Expression):
-    """
+    r"""
     Syntax: [\-][0-9]+
     Return Type: Integer
     Integer data type
@@ -39,7 +39,7 @@ class IntExp(Expression):
 
 
 class FloatExp(Expression):
-    """
+    r"""
     Syntax: [\-][0-9]+\.[0-9]+
     Return Type: Float
     Float data type
