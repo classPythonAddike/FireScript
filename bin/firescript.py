@@ -85,19 +85,18 @@ def decompile(file: str):
                 
                 click.echo(_type + " ", nl=False)
 
-                match _type:
-                    case "BOOL":
-                        click.echo(["FALSE", "TRUE"][int(args[0])] + " ", nl=False)
-                    case "INT":
-                        if args[0] == "0":
-                            click.echo("-", nl=False)
-                        click.echo(args[1], nl=False)
-                    case "FLOAT":
-                        if args[0] == "0":
-                            click.echo("-", nl=False)
-                        click.echo(args[1] + "." + args[2], nl=False)
-                    case "STRING":
-                        click.echo(" ".join(args), nl=False)
+                if _type == "BOOL":
+                    click.echo(["FALSE", "TRUE"][int(args[0])] + " ", nl=False)
+                if _type == "INT":
+                    if args[0] == "0":
+                        click.echo("-", nl=False)
+                    click.echo(args[1], nl=False)
+                if _type == "FLOAT":
+                    if args[0] == "0":
+                        click.echo("-", nl=False)
+                    click.echo(args[1] + "." + args[2], nl=False)
+                if _type == "STRING":
+                    click.echo(" ".join(args), nl=False)
             else:
                 click.echo(" ".join(line[2:]), nl=False)
 
