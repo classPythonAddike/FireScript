@@ -82,6 +82,12 @@ class SubExp(Expression):
                 f"Mismatching types! Got {self.lval.value_type} and {self.rval.value_type}!",
             ).raise_error()
 
+        if self.lval.value_type not in ["Integer", "Float"]:
+            FTypeError(
+                self.line,
+                f"Cannot multiply {self.lval.value_type}!"
+            ).raise_error()
+
         self._value_type = self.lval.value_type
         return variables
 
@@ -108,6 +114,31 @@ class MulExp(AddExp):
     Return Type: Any
     Multiply `n` values with each other
     """
+
+    def load_type(self, variables: Dict[str, str]) -> Dict[str, str]:
+        """
+        First, make sure every object is of the same type.
+        Then set the multiplication expression's type to that of the objects.
+        """
+        for val in self.values:
+            variables = val.load_type(variables)
+
+        val_types = [val.value_type for val in self.values]
+
+        # Types are not the same
+        if len(set(val_types)) != 1:
+            FTypeError(
+                self.line, f"Mismatching types! Got {', '.join(val_types)}!"
+            ).raise_error()
+
+        if val_types[0] not in ["Integer", "Float"]:
+            FTypeError(
+                self.line,
+                f"Cannot multiply a {val_types[0]} with a {val_types[0]}!"
+            ).raise_error()
+
+        self._value_type = val_types[0]
+        return variables
 
     def eval(self, variables: Dict[str, int]) -> List[List[str]]:
         return sum([val.eval(variables) for val in self.values], []) + [
