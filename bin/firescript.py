@@ -97,6 +97,9 @@ def decompile(file: str):
                     click.echo(args[1] + "." + args[2], nl=False)
                 if _type == "STRING":
                     click.echo(" ".join(args), nl=False)
+            elif inst == "COMPARE":
+                _types = ["EQUAL_TO", "GREATER_THAN", "GREATER_THAN_OR_EQUAL"]
+                click.echo(_types[int(line[2])], nl = False)
             else:
                 click.echo(" ".join(line[2:]), nl=False)
 

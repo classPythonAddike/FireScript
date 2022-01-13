@@ -11,6 +11,7 @@ from compiler.parser.expression_models.control_structures import IfExp
 from compiler.parser.expression_models.definitions import DefExp, AssignExp
 from compiler.parser.expression_models.builtins import PrintExp, PutExp, GetExp
 from compiler.parser.expression_models.arithmetic import AddExp, SubExp, MulExp, DivExp
+from compiler.parser.expression_models.comparison import EqualToExp, GreaterThanExp, LessThanExp, GreaterThanOrEqualExp, LessThanOrEqualExp
 from compiler.parser.expression_models.typecasting import (
     IntTypeCast,
     FloatTypeCast,
@@ -35,6 +36,11 @@ expression_types = {
         SubExp,
         MulExp,
         DivExp,
+        EqualToExp,
+        GreaterThanExp,
+        LessThanExp,
+        GreaterThanOrEqualExp,
+        LessThanOrEqualExp,
         IntTypeCast,
         FloatTypeCast,
         StrTypeCast,

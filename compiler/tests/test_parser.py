@@ -55,6 +55,25 @@ def test_boolean():
     check_expression_type(program.values[0].values[1], "BoolExp")
 
 
+def test_comparison():
+    code = "(begin (< 5 0) (> 6 9) (<-9 0))"
+    program = new_program(code)
+
+    check_expression_type(program.values[0], "LessThanExp")
+    check_expression_type(program.values[1], "GreaterThanExp")
+    check_expression_type(program.values[2], "LessThanExp")
+
+
+def test_if_statements():
+    code = "(begin (if (< 5 6) (print '5 is less than 6!') (print '5 is not less than 6!')))"
+    program = new_program(code)
+
+    check_expression_type(program.values[0], "IfExp")
+    check_expression_type(program.values[0].condition, "LessThanExp")
+    check_expression_type(program.values[0].body, "PrintExp")
+    check_expression_type(program.values[0].alternate, "PrintExp")
+
+
 def new_program(code: str) -> Program:
     program = Parser(Lexer(StringReader(code))).parse_program()
     check_expression_type(program, "Program")

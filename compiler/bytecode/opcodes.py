@@ -46,6 +46,9 @@ class OpCodes():
     PRINT_DOCS = "Pop the top value from the stack and print it, without a trailing newline"
     GET_DOCS = "Get user input, and store it onto the stack"
 
+    COMPARE = Auto.auto()
+    COMPARE_DOCS = "Pop the top two values from the stack, and compare them. Takes one argument - 0/1/2. 0 for ==, 1 for >, 2 for >=."
+
     SEP = "\n"
 
 
