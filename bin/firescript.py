@@ -39,7 +39,7 @@ def bytecode():
 @bytecode.command(short_help="List valid bytecode instructions (for developers)")
 def lsop():
     """List all valid bytecode instructions, along with their code (meant for developers)"""
-    click.echo("Format of ByteCode: NUM_CODES INSTRUCTION [ARGS]+")
+    click.echo("Format of ByteCode: INSTRUCTION [ARGS]+")
     click.echo()
 
     max_len = max([len(instruction) for instruction in operations])

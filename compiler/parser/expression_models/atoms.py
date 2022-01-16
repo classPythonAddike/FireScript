@@ -30,8 +30,8 @@ class IntExp(Expression):
         return self.__class__.atom_type()
 
     def eval(self, _: Dict[str, int]) -> List[List[str]]:
-        """PUSH, INT, +ve / -ve, integer"""
-        return [[OpCodes.PUSH, OpCodes.INT, f"{int(self.value >= 0)}",str(abs(self.value))]]
+        """PUSH, INT, integer"""
+        return [[OpCodes.PUSH, OpCodes.INT,str(self.value)]]
 
     @classmethod
     def atom_type(cls) -> str:
@@ -56,9 +56,9 @@ class FloatExp(Expression):
         return variables
 
     def eval(self, _: Dict[str, int]) -> List[List[str]]:
-        """PUSH, FLOAT, +ve / -ve, integer part, decimal part"""
-        integer, decimal = str(abs(self.value)).split(".")
-        return [[OpCodes.PUSH, OpCodes.FLOAT, f"{int(self.value >= 0)}", integer, decimal]]
+        """PUSH, FLOAT, integer part, decimal part"""
+        integer, decimal = str(self.value).split(".")
+        return [[OpCodes.PUSH, OpCodes.FLOAT, integer, decimal]]
 
     @property
     def value_type(self) -> str:

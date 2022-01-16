@@ -27,8 +27,8 @@ class OpCodes():
     FLOAT = Auto.auto()
     STRING = Auto.auto()
     BOOL = Auto.auto()
-    INT_DOCS = "Indicates that the next argument will be an integer. Takes two arguments - the sign of the integer (0/1) and abs(integer)"
-    FLOAT_DOCS = "Indicates that the next argument will be a float. Takes three arguments - sign of the float (0/1), integer part, and decimal part"
+    INT_DOCS = "Indicates that the next argument will be an integer. Takes one argument - the integer itself"
+    FLOAT_DOCS = "Indicates that the next argument will be a float. Takes two arguments - the integer part, and decimal part"
     STRING_DOCS = "Indicates that the next argument will be a string. Takes `n` arguments - `n` integers representing the ascii codes of each char."
     BOOL_DOCS = "Indicates that the next argument will be a boolean. Takes one argument - 1 for true and 0 for false"
 
