@@ -1,10 +1,12 @@
-*.txt
 main.fs
 *.fsc
+interpreter/*.fs
+compiler/*.fs
 
 ########################## Build Outputs ##########################
 
 bin/firescript
+bin/fscrun
 
 ########################## Python ##########################
 
@@ -334,3 +336,7 @@ Cargo.lock
 
 # MSVC Windows builds of rustc generate these, which store debugging information
 *.pdb
+
+######################### GOLANG #########################
+
+interpreter/main

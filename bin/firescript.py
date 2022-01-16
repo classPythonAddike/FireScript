@@ -24,7 +24,6 @@ def build(file: str):
     with open(out_file, "w") as f:
         f.write(bytecode)
 
-
 @cli.command(short_help="Display version info")
 def version():
     """Display version information"""
