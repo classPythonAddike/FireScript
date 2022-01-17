@@ -31,13 +31,14 @@ $ venv\Scripts\activate.bat # Windows
 (venv) $ pip install -r requirements.txt
 
 # Compile the compiler with nuitka
+# and interpreter, with go
 # If you want faster compile times, make sure you have `ccache` installed as nuitka uses it to cache builds
 (venv) $ make build
+
 ```
 
 To compile your `.fs` programs into bytecode -
 ```sh
 $ bin/firescript build examples/helloworld.fs
+$ bin/fscrun run -f examples/helloworld.fsc
 ```
-
-And you should see the resulting `.fsc` file in the same directory.

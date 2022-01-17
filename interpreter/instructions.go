@@ -1,20 +1,28 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"log"
 	"os"
+	"strconv"
 )
 
 var instructions map[int]string = map[int]string{
     0: "PUSH",
     1: "STORE",
     2: "LOAD",
+    4: "CAST",
     5: "INT",
     6: "FLOAT",
     7: "STRING",
     8: "BOOL",
     9: "ADD",
+    10: "SUB",
+    11: "MUL",
+    12: "DIV",
     13: "PRINT",
+    14: "GET",
 }
 
 type Instruction func()
@@ -47,31 +55,54 @@ func PUSH_BOOL(values []int, parser *Parser) Instruction {
     }
 }
 
-func ADD(parser *Parser) Instruction {
+func STORE(values []int, parser *Parser) Instruction {
     return func() {
-        rval := *parser.stack.Pop()
-        lval := *parser.stack.Pop()
+        parser.stack.Store(values[0])
+    }
+}
 
-        if lval.ObjType() == "Integer" {
-            lv, rv := CheckIntegers(lval, rval)
-            parser.stack.Push(
-                &Integer{lv.value + rv.value},
-            )
-        } else if lval.ObjType() == "Float" {
-            lv, rv := CheckFloats(lval, rval)
-            parser.stack.Push(
-                &Float{lv.value + rv.value},
-            )
-        } else if lval.ObjType() == "String" {
-            lv, rv := CheckStrings(lval, rval)
-            parser.stack.Push(
-                &String{lv.value + rv.value},
-            )
-        } else if lval.ObjType() == "Bool" {
-            lv, rv := CheckBools(lval, rval)
-            parser.stack.Push(
-                &Bool{lv.value || rv.value},
-            )
+func LOAD(values []int, parser *Parser) Instruction {
+    return func() {
+        parser.stack.Load(values[0])
+    }
+}
+
+func CAST(values []int, parser *Parser) Instruction {
+    return func() {
+        switch instructions[values[0]] {
+            case "INT":
+                val, err := strconv.Atoi((*parser.stack.Pop()).String())
+                if err != nil {
+                    log.Fatal(err)
+                }
+                parser.stack.Push(&Integer{val})
+            case "FLOAT":
+                val, err := strconv.ParseFloat((*parser.stack.Pop()).String(), 64)
+                if err != nil {
+                    log.Fatal(err)
+                }
+                parser.stack.Push(&Float{val})
+            case "BOOL":
+                var value *Bool
+                top := *parser.stack.Pop()
+
+                switch top.ObjType() {
+                    case "String":
+                        value = &Bool{top.String() == ""}
+                    case "Integer":
+                        value = &Bool{top.String() != "0"}
+                    case "Float":
+                        value = &Bool{top.(*Float).value != 0.0}
+                    case "Bool":
+                        value = &Bool{top.String() == "true"}
+                    default:
+                        log.Fatalf("Unknown type encountered while casting - %v\n", top.ObjType())
+                }
+                parser.stack.Push(value)
+            case "STRING":
+                parser.stack.Push(&String{(*parser.stack.Pop()).String()})
+            default:
+                log.Fatalf("Unknown type (in bytecode) encountered while casting - %v\n", values[0])
         }
     }
 }
@@ -79,6 +110,14 @@ func ADD(parser *Parser) Instruction {
 func PRINT(parser *Parser) Instruction {
     return func() {
         fmt.Print(*(parser.stack.Pop()))
+    }
+}
+
+func GET(parser *Parser) Instruction {
+    return func() {
+        scanner := bufio.NewScanner(os.Stdin)
+        scanner.Scan()
+        parser.stack.Push(&String{scanner.Text()})
     }
 }
 

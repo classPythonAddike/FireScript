@@ -4,6 +4,17 @@ from compiler.errors.errors import FEOLError, FParsingError, FEOFError
 from compiler.lexer.tokens import *
 from compiler.lexer.readers import Reader
 
+escape_chars = {
+    "n": "\n",
+    "t": "\t",
+    "r": "\r",
+    "b": "\b",
+    "f": "\f",
+    "a": "\a",
+    "'": "'",
+    '"': "\"",
+}
+
 
 class Lexer:
     def __init__(self, reader: Reader):
@@ -62,7 +73,12 @@ class Lexer:
                     self.reader.current_line_number(), "EOL while scanning string!"
                 ).raise_error
             else:
-                string += current
+                if current == "\\":
+                    self.reader.advance_pointer()
+                    peek = self.reader.current_character()
+                    string += escape_chars.get(peek, f"\\{peek}")
+                else:
+                    string += current
 
     def next_token(self) -> Token:
         """Lex, and return the next token from a reader"""

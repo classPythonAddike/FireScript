@@ -30,12 +30,26 @@ func ParseInstruction(raw_inst []string, p *Parser) Instruction {
                     case "BOOL":
                         return PUSH_BOOL(inst[2:], p)
                 }
+            case "STORE":
+                return STORE(inst[1:], p)
+            case "LOAD":
+                return LOAD(inst[1:], p)
+            case "CAST":
+                return CAST(inst[1:], p)
             case "ADD":
                 return ADD(p)
+            case "SUB":
+                return SUB(p)
+            case "MUL":
+                return MUL(p)
+            case "DIV":
+                return DIV(p)
             case "PRINT":
                 return PRINT(p)
+            case "GET":
+                return GET(p)
             default:
-                log.Fatalf("Unknow bytecode sequence - %v\n", inst[0])
+                log.Fatalf("Unknown bytecode sequence - %v\n", inst)
         }
     }
 

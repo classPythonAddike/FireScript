@@ -74,13 +74,13 @@ def decompile(file: str):
     code_instruction_map = {code[0]: inst for inst, code in operations.items()}
 
     for line in bytecode:
-        inst = code_instruction_map[line[1]]
+        inst = code_instruction_map[line[0]]
         click.echo(inst + " ", nl=False)
 
-        if len(line) >= 3:
+        if len(line) >= 2:
             if inst == "PUSH":
-                _type = code_instruction_map[line[2]]
-                args = line[3:]
+                _type = code_instruction_map[line[1]]
+                args = line[1:]
                 
                 click.echo(_type + " ", nl=False)
 
@@ -98,9 +98,9 @@ def decompile(file: str):
                     click.echo(" ".join(args), nl=False)
             elif inst == "COMPARE":
                 _types = ["EQUAL_TO", "GREATER_THAN", "GREATER_THAN_OR_EQUAL"]
-                click.echo(_types[int(line[2])], nl = False)
+                click.echo(_types[int(line[1])], nl = False)
             else:
-                click.echo(" ".join(line[2:]), nl=False)
+                click.echo(" ".join(line[1:]), nl=False)
 
         click.echo()
 

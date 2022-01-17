@@ -8,6 +8,5 @@
     
     (print "FireScript is a statically typed, compiled _and_ interpreted, Lisp programming language. ")
     (print "The parser is written in Python, which compiles your `.fs` files into bytecode. ")
-    (print "And the interpreter is written in Rust. ")
-    (put "We also have plans to compile the bytecode into executables!")
+    (put "And the interpreter is written in Golang.")
 )

@@ -39,7 +39,7 @@ func NewFloat(val []int) *Float {
     return &Float{float_val}
 }
 func (f Float) String() string {
-    return fmt.Sprintf("%g", f.value)
+    return fmt.Sprintf("%f", f.value)
 }
 func (f *Float) ObjType() string {
     return "Float"

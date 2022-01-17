@@ -2,7 +2,7 @@ package main
 
 type Stack struct {
     stack []*Object
-    variables map[int64]*Object
+    variables map[int]*Object
 }
 
 func (s *Stack) Push(item Object) {
@@ -15,10 +15,10 @@ func (s *Stack) Pop() *Object {
     return obj
 }
 
-func (s *Stack) Store(id int64) {
+func (s *Stack) Store(id int) {
     s.variables[id] = s.Pop()
 }
 
-func (s *Stack) Load(id int64) {
+func (s *Stack) Load(id int) {
     s.Push(*s.variables[id])
 }

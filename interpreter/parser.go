@@ -26,7 +26,7 @@ func NewParser(filename string) *Parser {
         0,
         &Stack{
             []*Object{},
-            map[int64]*Object{},
+            map[int]*Object{},
         },
     }
 }
